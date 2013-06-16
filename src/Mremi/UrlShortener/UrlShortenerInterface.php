@@ -16,7 +16,7 @@ interface UrlShortenerInterface
      *
      * @return string
      *
-     * @throws \RuntimeException
+     * @throws \Mremi\UrlShortener\Exception\InvalidApiResponseException
      */
     function shorten($longUrl);
 
@@ -27,7 +27,7 @@ interface UrlShortenerInterface
      *
      * @return string
      *
-     * @throws \RuntimeException
+     * @throws \Mremi\UrlShortener\Exception\InvalidApiResponseException
      */
     function expand($shortUrl);
 }

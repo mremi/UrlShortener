@@ -4,6 +4,7 @@ namespace Mremi\UrlShortener\Bitly;
 
 use Guzzle\Http\Client;
 
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\UrlShortenerInterface;
 
 /**
@@ -46,14 +47,7 @@ class BitlyShortener implements UrlShortenerInterface
             $domain
         ));
 
-        $response = json_decode($request->send()->getBody(true));
-
-        if (!$this->isOk($response)) {
-            throw new \RuntimeException(sprintf('Bit.ly returned status code "%s" with message "%s"',
-                $response->status_code,
-                $response->status_txt
-            ));
-        }
+        $response = $this->validate($request->send()->getBody(true));
 
         return $response->data->url;
     }
@@ -74,27 +68,39 @@ class BitlyShortener implements UrlShortenerInterface
             $hash
         ));
 
-        $response = json_decode($request->send()->getBody(true));
-
-        if (!$this->isOk($response)) {
-            throw new \RuntimeException(sprintf('Bit.ly returned status code "%s" with message "%s"',
-                $response->status_code,
-                $response->status_txt
-            ));
-        }
+        $response = $this->validate($request->send()->getBody(true));
 
         return $response->data->expand[0]->long_url;
     }
 
     /**
-     * Returns TRUE whether the status code of API response is 200
+     * Validates the Bit.ly's response and returns it whether the status code is 200
      *
-     * @param object $apiResponse
+     * @param string $apiRawResponse
      *
-     * @return boolean
+     * @return object
+     *
+     * @throws InvalidApiResponseException
      */
-    private function isOk($apiResponse)
+    private function validate($apiRawResponse)
     {
-        return 200 === $apiResponse->status_code;
+        $response = json_decode($apiRawResponse);
+
+        if (null === $response) {
+            throw new InvalidApiResponseException('Bit.ly response is probably mal-formed because cannot be json-decoded.');
+        }
+
+        if (!property_exists($response, 'status_code')) {
+            throw new InvalidApiResponseException('Property "status_code" does not exist within Bit.ly response.');
+        }
+
+        if (200 !== $response->status_code) {
+            throw new InvalidApiResponseException(sprintf('Bit.ly returned status code "%s" with message "%s"',
+                $response->status_code,
+                property_exists($response, 'status_txt') ? $response->status_txt : ''
+            ));
+        }
+
+        return $response;
     }
 }
