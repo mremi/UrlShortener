@@ -14,5 +14,5 @@ interface AuthenticationInterface
      *
      * @return string
      */
-    function getAccessToken();
+    public function getAccessToken();
 }
