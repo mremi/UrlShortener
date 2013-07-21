@@ -2,7 +2,7 @@
 
 namespace Mremi\UrlShortener\Bitly;
 
-use Guzzle\Http\Client;
+use Mremi\UrlShortener\Http\ClientFactoryInterface;
 
 /**
  * OAuth client class
@@ -11,6 +11,11 @@ use Guzzle\Http\Client;
  */
 class OAuthClient implements AuthenticationInterface
 {
+    /**
+     * @var ClientFactoryInterface
+     */
+    private $clientFactory;
+
     /**
      * @var string
      */
@@ -24,13 +29,15 @@ class OAuthClient implements AuthenticationInterface
     /**
      * Constructor
      *
-     * @param string $username A valid Bit.ly username
-     * @param string $password A valid Bit.ly password
+     * @param ClientFactoryInterface $clientFactory A client factory instance
+     * @param string                 $username      A valid Bit.ly username
+     * @param string                 $password      A valid Bit.ly password
      */
-    public function __construct($username, $password)
+    public function __construct(ClientFactoryInterface $clientFactory, $username, $password)
     {
-        $this->username = $username;
-        $this->password = $password;
+        $this->clientFactory = $clientFactory;
+        $this->username      = $username;
+        $this->password      = $password;
     }
 
     /**
@@ -38,7 +45,7 @@ class OAuthClient implements AuthenticationInterface
      */
     public function getAccessToken()
     {
-        $client = new Client('https://api-ssl.bitly.com/oauth/access_token');
+        $client = $this->clientFactory->create('https://api-ssl.bitly.com/oauth/access_token');
 
         $request = $client->post(null, null, null, array(
             'auth' => array(

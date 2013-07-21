@@ -43,8 +43,11 @@ Composer will install the library to your project's `vendor/mremi` directory.
 
 use Mremi\UrlShortener\Bitly\BitlyShortener;
 use Mremi\UrlShortener\Bitly\OAuthClient;
+use Mremi\UrlShortener\Http\ClientFactory;
 
-$shortener = new BitlyShortener(new OAuthClient('username', 'password'));
+$clientFactory = new ClientFactory;
+
+$shortener = new BitlyShortener($clientFactory, new OAuthClient($clientFactory, 'username', 'password'));
 
 $shortened = $shortener->shorten('http://www.google.com');
 
