@@ -3,6 +3,10 @@ URL shortener library
 
 This library allows you to shorten a URL, reverse is also possible.
 
+[![Build Status](https://api.travis-ci.org/mremi/UrlShortener.png?branch=master)](https://travis-ci.org/mremi/UrlShortener)
+[![Total Downloads](https://poser.pugx.org/mremi/url-shortener/downloads.png)](https://packagist.org/packages/mremi/url-shortener)
+[![Latest Stable Version](https://poser.pugx.org/mremi/url-shortener/v/stable.png)](https://packagist.org/packages/mremi/url-shortener)
+
 **Basic Docs**
 
 * [Installation](#installation)
