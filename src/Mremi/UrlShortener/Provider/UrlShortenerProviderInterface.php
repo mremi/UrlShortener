@@ -1,14 +1,21 @@
 <?php
 
-namespace Mremi\UrlShortener;
+namespace Mremi\UrlShortener\Provider;
 
 /**
- * Url shortener interface
+ * Url shortener provider interface
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
-interface UrlShortenerInterface
+interface UrlShortenerProviderInterface
 {
+    /**
+     * Gets the provider name
+     *
+     * @return string
+     */
+    public function getName();
+
     /**
      * Shorten the long given URL
      *

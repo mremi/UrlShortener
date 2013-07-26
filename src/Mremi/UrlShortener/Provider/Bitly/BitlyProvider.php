@@ -1,19 +1,19 @@
 <?php
 
-namespace Mremi\UrlShortener\Bitly;
+namespace Mremi\UrlShortener\Provider\Bitly;
 
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Http\ClientFactoryInterface;
-use Mremi\UrlShortener\UrlShortenerInterface;
+use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
- * Bit.ly shortener class
+ * Bit.ly provider class
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
-class BitlyShortener implements UrlShortenerInterface
+class BitlyProvider implements UrlShortenerProviderInterface
 {
-    const BASE_URL = 'https://api-ssl.bitly.com';
+    const API_BASE_URL = 'https://api-ssl.bitly.com';
 
     /**
      * @var ClientFactoryInterface
@@ -33,8 +33,16 @@ class BitlyShortener implements UrlShortenerInterface
      */
     public function __construct(ClientFactoryInterface $clientFactory, AuthenticationInterface $auth)
     {
-        $this->auth          = $auth;
         $this->clientFactory = $clientFactory;
+        $this->auth          = $auth;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'bitly';
     }
 
     /**
@@ -45,7 +53,7 @@ class BitlyShortener implements UrlShortenerInterface
      */
     public function shorten($longUrl, $domain = null)
     {
-        $client = $this->clientFactory->create(self::BASE_URL);
+        $client = $this->clientFactory->create(self::API_BASE_URL);
 
         $request = $client->get(sprintf('/v3/shorten?access_token=%s&longUrl=%s&domain=%s',
             $this->auth->getAccessToken(),
@@ -66,7 +74,7 @@ class BitlyShortener implements UrlShortenerInterface
      */
     public function expand($shortUrl, $hash = null)
     {
-        $client = $this->clientFactory->create(self::BASE_URL);
+        $client = $this->clientFactory->create(self::API_BASE_URL);
 
         $request = $client->get(sprintf('/v3/expand?access_token=%s&shortUrl=%s&hash=%s',
             $this->auth->getAccessToken(),

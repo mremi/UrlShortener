@@ -1,15 +1,15 @@
 <?php
 
-namespace Mremi\UrlShortener\Tests\Bitly;
+namespace Mremi\UrlShortener\Tests\Provider\Bitly;
 
-use Mremi\UrlShortener\Bitly\BitlyShortener;
+use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 
 /**
- * Tests BitlyShortener class
+ * Tests BitlyProvider class
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
-class BitlyShortenerTest extends \PHPUnit_Framework_TestCase
+class BitlyProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the shorten method throws exception if Bit.ly returns a string
@@ -17,21 +17,21 @@ class BitlyShortenerTest extends \PHPUnit_Framework_TestCase
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly response is probably mal-formed because cannot be json-decoded.
      */
-    public function testShortenThrowsExceptionIfStringFromApi()
+    public function testShortenThrowsExceptionIfApiResponseIsString()
     {
-        $shortener = new BitlyShortener($this->getClientFactory($this->getResponseAsString()), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsString()), $this->getMockAuthentication());
         $shortener->shorten('http://www.google.com/');
     }
 
     /**
-     * Tests the shorten method throws exception if Bit.ly returns an invalid object
+     * Tests the shorten method throws exception if Bit.ly returns a response with no status_code
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "status_code" does not exist within Bit.ly response.
      */
-    public function testShortenThrowsExceptionIfInvalidObjectFromApi()
+    public function testShortenThrowsExceptionIfApiResponseHasNoStatusCode()
     {
-        $shortener = new BitlyShortener($this->getClientFactory($this->getResponseAsInvalidObject()), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsInvalidObject()), $this->getMockAuthentication());
         $shortener->shorten('http://www.google.com/');
     }
 
@@ -41,25 +41,25 @@ class BitlyShortenerTest extends \PHPUnit_Framework_TestCase
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly returned status code "500" with message "KO"
      */
-    public function testShortenThrowsExceptionIfInvalidStatusCodeFromApi()
+    public function testShortenThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
-        $shortener = new BitlyShortener($this->getClientFactory($this->getResponseWithInvalidStatusCode()), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($this->getMockResponseWithInvalidStatusCode()), $this->getMockAuthentication());
         $shortener->shorten('http://www.google.com/');
     }
 
     /**
      * Tests the shorten method with a valid Bit.ly's response
      */
-    public function testShortenWithValidResponseFromApi()
+    public function testShortenWithValidApiResponse()
     {
-        $response = $this->getMockResponse();
+        $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<JSON
 {
   "data": {
     "global_hash": "900913",
     "hash": "ze6poY",
-    "long_url": "http://google.com/",
+    "long_url": "http://www.google.com/",
     "new_hash": 0,
     "url": "http://bit.ly/ze6poY"
   },
@@ -73,7 +73,7 @@ JSON;
             ->method('getBody')
             ->will($this->returnValue($apiRawResponse));
 
-        $shortener = new BitlyShortener($this->getClientFactory($response), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($response), $this->getMockAuthentication());
         $this->assertEquals('http://bit.ly/ze6poY', $shortener->shorten('http://www.google.com/'));
     }
 
@@ -83,21 +83,21 @@ JSON;
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly response is probably mal-formed because cannot be json-decoded.
      */
-    public function testExpandThrowsExceptionIfStringFromApi()
+    public function testExpandThrowsExceptionIfApiResponseIsString()
     {
-        $shortener = new BitlyShortener($this->getClientFactory($this->getResponseAsString()), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsString()), $this->getMockAuthentication());
         $shortener->expand('http://bit.ly/ze6poY');
     }
 
     /**
-     * Tests the expand method throws exception if Bit.ly returns an invalid object
+     * Tests the expand method throws exception if Bit.ly returns a response with no status_code
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "status_code" does not exist within Bit.ly response.
      */
-    public function testExpandThrowsExceptionIfInvalidObjectFromApi()
+    public function testExpandThrowsExceptionIfApiResponseHasNoStatusCode()
     {
-        $shortener = new BitlyShortener($this->getClientFactory($this->getResponseAsInvalidObject()), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsInvalidObject()), $this->getMockAuthentication());
         $shortener->expand('http://bit.ly/ze6poY');
     }
 
@@ -107,18 +107,18 @@ JSON;
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly returned status code "500" with message "KO"
      */
-    public function testExpandThrowsExceptionIfInvalidStatusCodeFromApi()
+    public function testExpandThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
-        $shortener = new BitlyShortener($this->getClientFactory($this->getResponseWithInvalidStatusCode()), $this->getMockAuthentication());
+        $shortener = new BitlyProvider($this->getMockClientFactory($this->getMockResponseWithInvalidStatusCode()), $this->getMockAuthentication());
         $shortener->expand('http://bit.ly/ze6poY');
     }
 
     /**
      * Tests the expand method with a valid Bit.ly's response
      */
-    public function testExpandWithValidResponseFromApi()
+    public function testExpandWithValidApiResponse()
     {
-        $response = $this->getMockResponse();
+        $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<JSON
 {
@@ -126,7 +126,7 @@ JSON;
     "expand": [
       {
         "global_hash": "900913",
-        "long_url": "http://google.com/",
+        "long_url": "http://www.google.com/",
         "short_url": "http://bit.ly/ze6poY",
         "user_hash": "ze6poY"
       }
@@ -142,8 +142,8 @@ JSON;
             ->method('getBody')
             ->will($this->returnValue($apiRawResponse));
 
-        $shortener = new BitlyShortener($this->getClientFactory($response), $this->getMockAuthentication());
-        $this->assertEquals('http://google.com/', $shortener->expand('http://bit.ly/ze6poY'));
+        $shortener = new BitlyProvider($this->getMockClientFactory($response), $this->getMockAuthentication());
+        $this->assertEquals('http://www.google.com/', $shortener->expand('http://bit.ly/ze6poY'));
     }
 
     /**
@@ -151,7 +151,7 @@ JSON;
      *
      * @return object
      */
-    private function getMockResponse()
+    private function getBaseMockResponse()
     {
         return $this->getMockBuilder('Guzzle\Http\Message\Response')
             ->disableOriginalConstructor()
@@ -163,9 +163,9 @@ JSON;
      *
      * @return object
      */
-    private function getResponseAsString()
+    private function getMockResponseAsString()
     {
-        $response = $this->getMockResponse();
+        $response = $this->getBaseMockResponse();
 
         $response
             ->expects($this->once())
@@ -180,16 +180,16 @@ JSON;
      *
      * @return object
      */
-    private function getResponseAsInvalidObject()
+    private function getMockResponseAsInvalidObject()
     {
-        $response = $this->getMockResponse();
+        $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<JSON
 {
   "data": {
     "global_hash": "900913",
     "hash": "ze6poY",
-    "long_url": "http://google.com/",
+    "long_url": "http://www.google.com/",
     "new_hash": 0,
     "url": "http://bit.ly/ze6poY"
   }
@@ -209,16 +209,16 @@ JSON;
      *
      * @return object
      */
-    private function getResponseWithInvalidStatusCode()
+    private function getMockResponseWithInvalidStatusCode()
     {
-        $response = $this->getMockResponse();
+        $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<JSON
 {
   "data": {
     "global_hash": "900913",
     "hash": "ze6poY",
-    "long_url": "http://google.com/",
+    "long_url": "http://www.google.com/",
     "new_hash": 0,
     "url": "http://bit.ly/ze6poY"
   },
@@ -242,7 +242,7 @@ JSON;
      *
      * @return object
      */
-    private function getClientFactory($response)
+    private function getMockClientFactory($response)
     {
         $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
         $request
@@ -272,6 +272,6 @@ JSON;
      */
     private function getMockAuthentication()
     {
-        return $this->getMock('Mremi\UrlShortener\Bitly\AuthenticationInterface');
+        return $this->getMock('Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface');
     }
 }

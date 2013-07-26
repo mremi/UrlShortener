@@ -1,6 +1,6 @@
 <?php
 
-namespace Mremi\UrlShortener\Bitly;
+namespace Mremi\UrlShortener\Provider\Bitly;
 
 /**
  * Authentication interface

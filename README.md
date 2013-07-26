@@ -11,6 +11,7 @@ This library allows you to shorten a URL, reverse is also possible.
 
 * [Installation](#installation)
 * [Bit.ly API](#bitly-api)
+* [Chain providers](#chain-providers)
 
 <a name="installation"></a>
 
@@ -45,15 +46,36 @@ Composer will install the library to your project's `vendor/mremi` directory.
 ```php
 <?php
 
-use Mremi\UrlShortener\Bitly\BitlyShortener;
-use Mremi\UrlShortener\Bitly\OAuthClient;
 use Mremi\UrlShortener\Http\ClientFactory;
+use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
+use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 
-$clientFactory = new ClientFactory;
+$bitlyProvider = new BitlyProvider(new ClientFactory, new OAuthClient(new ClientFactory, 'username', 'password'));
 
-$shortener = new BitlyShortener($clientFactory, new OAuthClient($clientFactory, 'username', 'password'));
+$shortened = $bitlyProvider->shorten('http://www.google.com');
 
-$shortened = $shortener->shorten('http://www.google.com');
+$expanded  = $bitlyProvider->expand('http://bit.ly/ze6poY');
+```
 
-$expanded = $shortener->expand('http://bit.ly/13TE0qU');
+<a name="chain-providers"></a>
+
+## Chain providers
+
+```php
+<?php
+
+use Mremi\UrlShortener\Http\ClientFactory;
+use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
+use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
+use Mremi\UrlShortener\Provider\ChainProvider;
+
+$chainProvider = new ChainProvider;
+
+$bitlyProvider = new BitlyProvider(new ClientFactory, new OAuthClient(new ClientFactory, 'username', 'password'));
+
+$chainProvider->addProvider($bitlyProvider);
+
+$shortened = $chainProvider->getProvider('bitly')->shorten('http://www.google.com');
+
+$expanded  = $chainProvider->getProvider('bitly')->expand('http://bit.ly/ze6poY');
 ```
