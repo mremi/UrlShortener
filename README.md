@@ -11,6 +11,7 @@ This library allows you to shorten a URL, reverse is also possible.
 
 * [Installation](#installation)
 * [Bit.ly API](#bitly-api)
+* [Google API](#google-api)
 * [Chain providers](#chain-providers)
 
 <a name="installation"></a>
@@ -57,6 +58,23 @@ $shortened = $bitlyProvider->shorten('http://www.google.com');
 $expanded  = $bitlyProvider->expand('http://bit.ly/ze6poY');
 ```
 
+<a name="google-api"></a>
+
+## Google API
+
+```php
+<?php
+
+use Mremi\UrlShortener\Http\ClientFactory;
+use Mremi\UrlShortener\Provider\Google\GoogleProvider;
+
+$googleProvider = new GoogleProvider(new ClientFactory, 'api_key');
+
+$shortened = $googleProvider->shorten('http://www.google.com');
+
+$expanded  = $googleProvider->expand('http://goo.gl/fbsS');
+```
+
 <a name="chain-providers"></a>
 
 ## Chain providers
@@ -68,14 +86,18 @@ use Mremi\UrlShortener\Http\ClientFactory;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 use Mremi\UrlShortener\Provider\ChainProvider;
+use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
 $chainProvider = new ChainProvider;
 
-$bitlyProvider = new BitlyProvider(new ClientFactory, new OAuthClient(new ClientFactory, 'username', 'password'));
+$bitlyProvider  = new BitlyProvider(new ClientFactory, new OAuthClient(new ClientFactory, 'username', 'password'));
+$googleProvider = new GoogleProvider(new ClientFactory, 'api_key');
 
 $chainProvider->addProvider($bitlyProvider);
+$chainProvider->addProvider($googleProvider);
+// add yours...
 
 $shortened = $chainProvider->getProvider('bitly')->shorten('http://www.google.com');
 
-$expanded  = $chainProvider->getProvider('bitly')->expand('http://bit.ly/ze6poY');
+$expanded  = $chainProvider->getProvider('google')->expand('http://goo.gl/fbsS');
 ```
