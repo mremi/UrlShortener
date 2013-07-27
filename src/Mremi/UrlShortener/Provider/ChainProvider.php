@@ -12,7 +12,7 @@ class ChainProvider
     /**
      * @var array
      */
-    private $providers;
+    private $providers = array();
 
     /**
      * Adds the given provider to the chain
