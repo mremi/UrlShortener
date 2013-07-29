@@ -17,11 +17,11 @@ interface UrlShortenerProviderInterface
     public function getName();
 
     /**
-     * Shorten the long given URL
+     * Shortens the long given URL
      *
      * @param string $longUrl URL to shorten
      *
-     * @return string
+     * @return \Mremi\UrlShortener\Model\LinkInterface
      *
      * @throws \Mremi\UrlShortener\Exception\InvalidApiResponseException
      */
@@ -32,7 +32,7 @@ interface UrlShortenerProviderInterface
      *
      * @param string $shortUrl URL to expand
      *
-     * @return string
+     * @return \Mremi\UrlShortener\Model\LinkInterface
      *
      * @throws \Mremi\UrlShortener\Exception\InvalidApiResponseException
      */

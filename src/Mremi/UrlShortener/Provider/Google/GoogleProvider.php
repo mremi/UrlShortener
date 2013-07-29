@@ -4,6 +4,7 @@ namespace Mremi\UrlShortener\Provider\Google;
 
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Http\ClientFactoryInterface;
+use Mremi\UrlShortener\Model\LinkManagerInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
@@ -21,6 +22,11 @@ class GoogleProvider implements UrlShortenerProviderInterface
     private $clientFactory;
 
     /**
+     * @var LinkManagerInterface
+     */
+    private $linkManager;
+
+    /**
      * @var string
      */
     private $apiKey;
@@ -29,11 +35,13 @@ class GoogleProvider implements UrlShortenerProviderInterface
      * Constructor
      *
      * @param ClientFactoryInterface $clientFactory A client factory instance
+     * @param LinkManagerInterface   $linkManager   A link manager instance
      * @param string                 $apiKey        A Google API key, optional
      */
-    public function __construct(ClientFactoryInterface $clientFactory, $apiKey = null)
+    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, $apiKey = null)
     {
         $this->clientFactory = $clientFactory;
+        $this->linkManager   = $linkManager;
         $this->apiKey        = $apiKey;
     }
 
@@ -60,7 +68,12 @@ class GoogleProvider implements UrlShortenerProviderInterface
 
         $response = $this->validate($request->send()->getBody(true));
 
-        return $response->id;
+        $link = $this->linkManager->create();
+        $link->setProviderName($this->getName());
+        $link->setShortUrl($response->id);
+        $link->setLongUrl($longUrl);
+
+        return $link;
     }
 
     /**
@@ -76,7 +89,12 @@ class GoogleProvider implements UrlShortenerProviderInterface
 
         $response = $this->validate($request->send()->getBody(true), true);
 
-        return $response->longUrl;
+        $link = $this->linkManager->create();
+        $link->setProviderName($this->getName());
+        $link->setShortUrl($shortUrl);
+        $link->setLongUrl($response->longUrl);
+
+        return $link;
     }
 
     /**

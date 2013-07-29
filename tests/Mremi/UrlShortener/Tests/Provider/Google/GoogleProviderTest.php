@@ -16,12 +16,12 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUriWithNoApiKeyAndNoParameters()
     {
-        $shortener = new GoogleProvider($this->getBaseMockClientFactory());
+        $provider = new GoogleProvider($this->getBaseMockClientFactory(), $this->getMockLinkManager());
 
-        $method = new \ReflectionMethod($shortener, 'getUri');
+        $method = new \ReflectionMethod($provider, 'getUri');
         $method->setAccessible(true);
 
-        $uri = $method->invoke($shortener);
+        $uri = $method->invoke($provider);
 
         $this->assertNull($uri);
     }
@@ -31,12 +31,12 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUriWithNoApiKeyAndSomeParameters()
     {
-        $shortener = new GoogleProvider($this->getBaseMockClientFactory());
+        $provider = new GoogleProvider($this->getBaseMockClientFactory(), $this->getMockLinkManager());
 
-        $method = new \ReflectionMethod($shortener, 'getUri');
+        $method = new \ReflectionMethod($provider, 'getUri');
         $method->setAccessible(true);
 
-        $uri = $method->invoke($shortener, array('foo' => 'bar'));
+        $uri = $method->invoke($provider, array('foo' => 'bar'));
 
         $this->assertEquals('?foo=bar', $uri);
     }
@@ -46,12 +46,12 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUriWithApiKeyAndNoParameters()
     {
-        $shortener = new GoogleProvider($this->getBaseMockClientFactory(), 'secret');
+        $provider = new GoogleProvider($this->getBaseMockClientFactory(), $this->getMockLinkManager(), 'secret');
 
-        $method = new \ReflectionMethod($shortener, 'getUri');
+        $method = new \ReflectionMethod($provider, 'getUri');
         $method->setAccessible(true);
 
-        $uri = $method->invoke($shortener);
+        $uri = $method->invoke($provider);
 
         $this->assertEquals('?key=secret', $uri);
     }
@@ -61,12 +61,12 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUriWithApiKeyAndSomeParameters()
     {
-        $shortener = new GoogleProvider($this->getBaseMockClientFactory(), 'secret');
+        $provider = new GoogleProvider($this->getBaseMockClientFactory(), $this->getMockLinkManager(), 'secret');
 
-        $method = new \ReflectionMethod($shortener, 'getUri');
+        $method = new \ReflectionMethod($provider, 'getUri');
         $method->setAccessible(true);
 
-        $uri = $method->invoke($shortener, array('foo' => 'bar'));
+        $uri = $method->invoke($provider, array('foo' => 'bar'));
 
         $this->assertEquals('?foo=bar&key=secret', $uri);
     }
@@ -79,8 +79,8 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfResponseApiIsString()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseAsString(), 'post'));
-        $shortener->shorten('http://www.google.com/');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseAsString(), 'post'), $this->getMockLinkManager());
+        $provider->shorten('http://www.google.com/');
     }
 
     /**
@@ -91,8 +91,8 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfApiResponseIsError()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithError(), 'post'));
-        $shortener->shorten('http://www.google.com/');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithError(), 'post'), $this->getMockLinkManager());
+        $provider->shorten('http://www.google.com/');
     }
 
     /**
@@ -103,8 +103,8 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoId()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoId(), 'post'));
-        $shortener->shorten('http://www.google.com/');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoId(), 'post'), $this->getMockLinkManager());
+        $provider->shorten('http://www.google.com/');
     }
 
     /**
@@ -115,8 +115,8 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoLongUrl()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoLongUrl(), 'post'));
-        $shortener->shorten('http://www.google.com/');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoLongUrl(), 'post'), $this->getMockLinkManager());
+        $provider->shorten('http://www.google.com/');
     }
 
     /**
@@ -139,8 +139,30 @@ JSON;
             ->method('getBody')
             ->will($this->returnValue($apiRawResponse));
 
-        $shortener = new GoogleProvider($this->getMockClientFactory($response, 'post'));
-        $this->assertEquals('http://goo.gl/fbsS', $shortener->shorten('http://www.google.com/'));
+        $link = $this->getMock('Mremi\UrlShortener\Model\LinkInterface');
+        $link
+            ->expects($this->once())
+            ->method('setProviderName')
+            ->with($this->equalTo('google'));
+        $link
+            ->expects($this->once())
+            ->method('setShortUrl')
+            ->with($this->equalTo('http://goo.gl/fbsS'));
+        $link
+            ->expects($this->once())
+            ->method('setLongUrl')
+            ->with($this->equalTo('http://www.google.com/'));
+
+        $linkManager = $this->getMockLinkManager();
+
+        $linkManager
+            ->expects($this->once())
+            ->method('create')
+            ->will($this->returnValue($link));
+
+        $provider = new GoogleProvider($this->getMockClientFactory($response, 'post'), $linkManager);
+
+        $this->assertInstanceOf('Mremi\UrlShortener\Model\LinkInterface', $provider->shorten('http://www.google.com/'));
     }
 
     /**
@@ -151,8 +173,8 @@ JSON;
      */
     public function testExpandThrowsExceptionIfResponseApiIsString()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseAsString(), 'get'));
-        $shortener->expand('http://goo.gl/fbsS');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseAsString(), 'get'), $this->getMockLinkManager());
+        $provider->expand('http://goo.gl/fbsS');
     }
 
     /**
@@ -163,8 +185,8 @@ JSON;
      */
     public function testExpandThrowsExceptionIfApiResponseIsError()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithError(), 'get'));
-        $shortener->expand('http://goo.gl/fbsS');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithError(), 'get'), $this->getMockLinkManager());
+        $provider->expand('http://goo.gl/fbsS');
     }
 
     /**
@@ -175,8 +197,8 @@ JSON;
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoId()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoId(), 'get'));
-        $shortener->expand('http://goo.gl/fbsS');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoId(), 'get'), $this->getMockLinkManager());
+        $provider->expand('http://goo.gl/fbsS');
     }
 
     /**
@@ -187,8 +209,8 @@ JSON;
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoLongUrl()
     {
-        $shortener = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoLongUrl(), 'get'));
-        $shortener->expand('http://goo.gl/fbsS');
+        $provider = new GoogleProvider($this->getMockClientFactory($this->getMockResponseWithNoLongUrl(), 'get'), $this->getMockLinkManager());
+        $provider->expand('http://goo.gl/fbsS');
     }
 
     /**
@@ -214,8 +236,8 @@ JSON;
             ->method('getBody')
             ->will($this->returnValue($apiRawResponse));
 
-        $shortener = new GoogleProvider($this->getMockClientFactory($response, 'get'));
-        $shortener->expand('http://goo.gl/fbsS');
+        $provider = new GoogleProvider($this->getMockClientFactory($response, 'get'), $this->getMockLinkManager());
+        $provider->expand('http://goo.gl/fbsS');
     }
 
     /**
@@ -242,8 +264,8 @@ JSON;
             ->method('getBody')
             ->will($this->returnValue($apiRawResponse));
 
-        $shortener = new GoogleProvider($this->getMockClientFactory($response, 'get'));
-        $shortener->expand('http://goo.gl/fbsS');
+        $provider = new GoogleProvider($this->getMockClientFactory($response, 'get'), $this->getMockLinkManager());
+        $provider->expand('http://goo.gl/fbsS');
     }
 
     /**
@@ -267,8 +289,30 @@ JSON;
             ->method('getBody')
             ->will($this->returnValue($apiRawResponse));
 
-        $shortener = new GoogleProvider($this->getMockClientFactory($response, 'get'));
-        $this->assertEquals('http://www.google.com/', $shortener->expand('http://goo.gl/fbsS'));
+        $link = $this->getMock('Mremi\UrlShortener\Model\LinkInterface');
+        $link
+            ->expects($this->once())
+            ->method('setProviderName')
+            ->with($this->equalTo('google'));
+        $link
+            ->expects($this->once())
+            ->method('setShortUrl')
+            ->with($this->equalTo('http://goo.gl/fbsS'));
+        $link
+            ->expects($this->once())
+            ->method('setLongUrl')
+            ->with($this->equalTo('http://www.google.com/'));
+
+        $linkManager = $this->getMockLinkManager();
+
+        $linkManager
+            ->expects($this->once())
+            ->method('create')
+            ->will($this->returnValue($link));
+
+        $provider = new GoogleProvider($this->getMockClientFactory($response, 'get'), $linkManager);
+
+        $this->assertInstanceOf('Mremi\UrlShortener\Model\LinkInterface', $provider->expand('http://goo.gl/fbsS'));
     }
 
     /**
@@ -394,7 +438,7 @@ JSON;
     }
 
     /**
-     * Gets a client factory
+     * Gets mock of client factory
      *
      * @param object $response      A mocked response
      * @param string $requestMethod A request method (get|post)
@@ -422,5 +466,15 @@ JSON;
             ->will($this->returnValue($client));
 
         return $clientFactory;
+    }
+
+    /**
+     * Gets mock of link manager
+     *
+     * @return object
+     */
+    private function getMockLinkManager()
+    {
+        return $this->getMock('Mremi\UrlShortener\Model\LinkManagerInterface');
     }
 }

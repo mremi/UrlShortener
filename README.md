@@ -48,10 +48,11 @@ Composer will install the library to your project's `vendor/mremi` directory.
 <?php
 
 use Mremi\UrlShortener\Http\ClientFactory;
+use Mremi\UrlShortener\Model\LinkManager;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 
-$bitlyProvider = new BitlyProvider(new ClientFactory, new OAuthClient(new ClientFactory, 'username', 'password'));
+$bitlyProvider = new BitlyProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), new OAuthClient(new ClientFactory, 'username', 'password'));
 
 $shortened = $bitlyProvider->shorten('http://www.google.com');
 
@@ -66,9 +67,10 @@ $expanded  = $bitlyProvider->expand('http://bit.ly/ze6poY');
 <?php
 
 use Mremi\UrlShortener\Http\ClientFactory;
+use Mremi\UrlShortener\Model\LinkManager;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
-$googleProvider = new GoogleProvider(new ClientFactory, 'api_key');
+$googleProvider = new GoogleProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), 'api_key');
 
 $shortened = $googleProvider->shorten('http://www.google.com');
 
@@ -83,6 +85,7 @@ $expanded  = $googleProvider->expand('http://goo.gl/fbsS');
 <?php
 
 use Mremi\UrlShortener\Http\ClientFactory;
+use Mremi\UrlShortener\Model\LinkManager;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 use Mremi\UrlShortener\Provider\ChainProvider;
@@ -90,8 +93,8 @@ use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
 $chainProvider = new ChainProvider;
 
-$bitlyProvider  = new BitlyProvider(new ClientFactory, new OAuthClient(new ClientFactory, 'username', 'password'));
-$googleProvider = new GoogleProvider(new ClientFactory, 'api_key');
+$bitlyProvider  = new BitlyProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), new OAuthClient(new ClientFactory, 'username', 'password'));
+$googleProvider = new GoogleProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), 'api_key');
 
 $chainProvider->addProvider($bitlyProvider);
 $chainProvider->addProvider($googleProvider);

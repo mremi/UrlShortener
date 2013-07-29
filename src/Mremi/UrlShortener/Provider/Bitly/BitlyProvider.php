@@ -4,6 +4,7 @@ namespace Mremi\UrlShortener\Provider\Bitly;
 
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Http\ClientFactoryInterface;
+use Mremi\UrlShortener\Model\LinkManagerInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
@@ -21,6 +22,11 @@ class BitlyProvider implements UrlShortenerProviderInterface
     private $clientFactory;
 
     /**
+     * @var LinkManagerInterface
+     */
+    private $linkManager;
+
+    /**
      * @var AuthenticationInterface
      */
     private $auth;
@@ -29,11 +35,13 @@ class BitlyProvider implements UrlShortenerProviderInterface
      * Constructor
      *
      * @param ClientFactoryInterface  $clientFactory A client factory instance
+     * @param LinkManagerInterface    $linkManager   A link manager instance
      * @param AuthenticationInterface $auth          An authentication instance
      */
-    public function __construct(ClientFactoryInterface $clientFactory, AuthenticationInterface $auth)
+    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, AuthenticationInterface $auth)
     {
         $this->clientFactory = $clientFactory;
+        $this->linkManager   = $linkManager;
         $this->auth          = $auth;
     }
 
@@ -63,7 +71,12 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
         $response = $this->validate($request->send()->getBody(true));
 
-        return $response->data->url;
+        $link = $this->linkManager->create();
+        $link->setProviderName($this->getName());
+        $link->setShortUrl($response->data->url);
+        $link->setLongUrl($longUrl);
+
+        return $link;
     }
 
     /**
@@ -84,7 +97,12 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
         $response = $this->validate($request->send()->getBody(true));
 
-        return $response->data->expand[0]->long_url;
+        $link = $this->linkManager->create();
+        $link->setProviderName($this->getName());
+        $link->setShortUrl($shortUrl);
+        $link->setLongUrl($response->data->expand[0]->long_url);
+
+        return $link;
     }
 
     /**
