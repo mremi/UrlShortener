@@ -32,17 +32,24 @@ class BitlyProvider implements UrlShortenerProviderInterface
     private $auth;
 
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * Constructor
      *
      * @param ClientFactoryInterface  $clientFactory A client factory instance
      * @param LinkManagerInterface    $linkManager   A link manager instance
      * @param AuthenticationInterface $auth          An authentication instance
+     * @param array                   $options       An array of options used to do the shorten/expand request
      */
-    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, AuthenticationInterface $auth)
+    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, AuthenticationInterface $auth, array $options = array())
     {
         $this->clientFactory = $clientFactory;
         $this->linkManager   = $linkManager;
         $this->auth          = $auth;
+        $this->options       = $options;
     }
 
     /**
@@ -67,7 +74,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
             $this->auth->getAccessToken(),
             urlencode($longUrl),
             $domain
-        ));
+        ), array(), $this->options);
 
         $response = $this->validate($request->send()->getBody(true));
 
@@ -93,7 +100,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
             $this->auth->getAccessToken(),
             urlencode($shortUrl),
             $hash
-        ));
+        ), array(), $this->options);
 
         $response = $this->validate($request->send()->getBody(true));
 

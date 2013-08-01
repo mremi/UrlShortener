@@ -52,7 +52,12 @@ use Mremi\UrlShortener\Model\LinkManager;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 
-$bitlyProvider = new BitlyProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), new OAuthClient(new ClientFactory, 'username', 'password'));
+$bitlyProvider = new BitlyProvider(
+    new ClientFactory,
+    new LinkManager('Mremi\UrlShortener\Model\Link'),
+    new OAuthClient(new ClientFactory, 'username', 'password'),
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
 
 $shortened = $bitlyProvider->shorten('http://www.google.com');
 
@@ -70,7 +75,12 @@ use Mremi\UrlShortener\Http\ClientFactory;
 use Mremi\UrlShortener\Model\LinkManager;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
-$googleProvider = new GoogleProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), 'api_key');
+$googleProvider = new GoogleProvider(
+    new ClientFactory,
+    new LinkManager('Mremi\UrlShortener\Model\Link'),
+    'api_key',
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
 
 $shortened = $googleProvider->shorten('http://www.google.com');
 
@@ -93,8 +103,18 @@ use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
 $chainProvider = new ChainProvider;
 
-$bitlyProvider  = new BitlyProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), new OAuthClient(new ClientFactory, 'username', 'password'));
-$googleProvider = new GoogleProvider(new ClientFactory, new LinkManager('Mremi\UrlShortener\Model\Link'), 'api_key');
+$bitlyProvider  = new BitlyProvider(
+    new ClientFactory,
+    new LinkManager('Mremi\UrlShortener\Model\Link'),
+    new OAuthClient(new ClientFactory, 'username', 'password'),
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+$googleProvider = new GoogleProvider(
+    new ClientFactory,
+    new LinkManager('Mremi\UrlShortener\Model\Link'),
+    'api_key',
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
 
 $chainProvider->addProvider($bitlyProvider);
 $chainProvider->addProvider($googleProvider);

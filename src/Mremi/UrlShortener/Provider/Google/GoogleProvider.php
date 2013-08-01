@@ -32,17 +32,24 @@ class GoogleProvider implements UrlShortenerProviderInterface
     private $apiKey;
 
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
      * Constructor
      *
      * @param ClientFactoryInterface $clientFactory A client factory instance
      * @param LinkManagerInterface   $linkManager   A link manager instance
      * @param string                 $apiKey        A Google API key, optional
+     * @param array                  $options       An array of options used to do the shorten/expand request
      */
-    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, $apiKey = null)
+    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, $apiKey = null, array $options = array())
     {
         $this->clientFactory = $clientFactory;
         $this->linkManager   = $linkManager;
         $this->apiKey        = $apiKey;
+        $this->options       = $options;
     }
 
     /**
@@ -64,7 +71,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
             'Content-Type' => 'application/json'
         ), json_encode(array(
             'longUrl' => $longUrl,
-        )));
+        )), $this->options);
 
         $response = $this->validate($request->send()->getBody(true));
 
@@ -85,7 +92,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
 
         $request = $client->get($this->getUri(array(
             'shortUrl' => $shortUrl,
-        )));
+        )), array(), $this->options);
 
         $response = $this->validate($request->send()->getBody(true), true);
 
