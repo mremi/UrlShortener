@@ -45,7 +45,7 @@ class ChainProvider
     /**
      * Gets the chain providers
      *
-     * @return array
+     * @return UrlShortenerProviderInterface[]
      */
     public function getProviders()
     {

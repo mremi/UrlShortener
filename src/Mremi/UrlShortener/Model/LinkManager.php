@@ -25,7 +25,7 @@ class LinkManager implements LinkManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create()
     {
