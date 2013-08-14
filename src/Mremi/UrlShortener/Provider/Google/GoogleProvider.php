@@ -4,7 +4,7 @@ namespace Mremi\UrlShortener\Provider\Google;
 
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Http\ClientFactoryInterface;
-use Mremi\UrlShortener\Model\LinkManagerInterface;
+use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
@@ -22,11 +22,6 @@ class GoogleProvider implements UrlShortenerProviderInterface
     private $clientFactory;
 
     /**
-     * @var LinkManagerInterface
-     */
-    private $linkManager;
-
-    /**
      * @var string
      */
     private $apiKey;
@@ -40,14 +35,12 @@ class GoogleProvider implements UrlShortenerProviderInterface
      * Constructor
      *
      * @param ClientFactoryInterface $clientFactory A client factory instance
-     * @param LinkManagerInterface   $linkManager   A link manager instance
      * @param string                 $apiKey        A Google API key, optional
      * @param array                  $options       An array of options used to do the shorten/expand request
      */
-    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, $apiKey = null, array $options = array())
+    public function __construct(ClientFactoryInterface $clientFactory, $apiKey = null, array $options = array())
     {
         $this->clientFactory = $clientFactory;
-        $this->linkManager   = $linkManager;
         $this->apiKey        = $apiKey;
         $this->options       = $options;
     }
@@ -63,45 +56,35 @@ class GoogleProvider implements UrlShortenerProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function shorten($longUrl)
+    public function shorten(LinkInterface $link)
     {
         $client = $this->clientFactory->create(self::API_URL);
 
         $request = $client->post($this->getUri(), array(
             'Content-Type' => 'application/json'
         ), json_encode(array(
-            'longUrl' => $longUrl,
+            'longUrl' => $link->getLongUrl(),
         )), $this->options);
 
         $response = $this->validate($request->send()->getBody(true));
 
-        $link = $this->linkManager->create();
-        $link->setProviderName($this->getName());
         $link->setShortUrl($response->id);
-        $link->setLongUrl($longUrl);
-
-        return $link;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function expand($shortUrl)
+    public function expand(LinkInterface $link)
     {
         $client = $this->clientFactory->create(self::API_URL);
 
         $request = $client->get($this->getUri(array(
-            'shortUrl' => $shortUrl,
+            'shortUrl' => $link->getShortUrl(),
         )), array(), $this->options);
 
         $response = $this->validate($request->send()->getBody(true), true);
 
-        $link = $this->linkManager->create();
-        $link->setProviderName($this->getName());
-        $link->setShortUrl($shortUrl);
         $link->setLongUrl($response->longUrl);
-
-        return $link;
     }
 
     /**

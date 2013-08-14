@@ -15,6 +15,7 @@ This library allows you to shorten a URL, reverse is also possible.
 * [Bit.ly API](#bitly-api)
 * [Google API](#google-api)
 * [Chain providers](#chain-providers)
+* [Retrieve link](#retrieve-link)
 
 <a name="installation"></a>
 
@@ -50,20 +51,22 @@ Composer will install the library to your project's `vendor/mremi` directory.
 <?php
 
 use Mremi\UrlShortener\Http\ClientFactory;
-use Mremi\UrlShortener\Model\LinkManager;
+use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
+
 $bitlyProvider = new BitlyProvider(
     new ClientFactory,
-    new LinkManager('Mremi\UrlShortener\Model\Link'),
     new OAuthClient(new ClientFactory, 'username', 'password'),
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
-$shortened = $bitlyProvider->shorten('http://www.google.com');
+$bitlyProvider->shorten($link);
 
-$expanded  = $bitlyProvider->expand('http://bit.ly/ze6poY');
+$bitlyProvider->expand($link);
 ```
 
 <a name="google-api"></a>
@@ -74,19 +77,21 @@ $expanded  = $bitlyProvider->expand('http://bit.ly/ze6poY');
 <?php
 
 use Mremi\UrlShortener\Http\ClientFactory;
-use Mremi\UrlShortener\Model\LinkManager;
+use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
+
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
 
 $googleProvider = new GoogleProvider(
     new ClientFactory,
-    new LinkManager('Mremi\UrlShortener\Model\Link'),
     'api_key',
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
-$shortened = $googleProvider->shorten('http://www.google.com');
+$googleProvider->shorten($link);
 
-$expanded  = $googleProvider->expand('http://goo.gl/fbsS');
+$googleProvider->expand($link);
 ```
 
 <a name="chain-providers"></a>
@@ -96,33 +101,36 @@ $expanded  = $googleProvider->expand('http://goo.gl/fbsS');
 ```php
 <?php
 
-use Mremi\UrlShortener\Http\ClientFactory;
-use Mremi\UrlShortener\Model\LinkManager;
-use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
-use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
+use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\ChainProvider;
-use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
 $chainProvider = new ChainProvider;
-
-$bitlyProvider  = new BitlyProvider(
-    new ClientFactory,
-    new LinkManager('Mremi\UrlShortener\Model\Link'),
-    new OAuthClient(new ClientFactory, 'username', 'password'),
-    array('connect_timeout' => 1, 'timeout' => 1)
-);
-$googleProvider = new GoogleProvider(
-    new ClientFactory,
-    new LinkManager('Mremi\UrlShortener\Model\Link'),
-    'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
-);
-
 $chainProvider->addProvider($bitlyProvider);
 $chainProvider->addProvider($googleProvider);
 // add yours...
 
-$shortened = $chainProvider->getProvider('bitly')->shorten('http://www.google.com');
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
 
-$expanded  = $chainProvider->getProvider('google')->expand('http://goo.gl/fbsS');
+$chainProvider->getProvider('bitly')->shorten($link);
+
+$chainProvider->getProvider('google')->expand($link);
+```
+
+<a name="retrieve-link"></a>
+
+## Retrieve link
+
+You can retrieve some links using these finders:
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\LinkManager;
+
+$linkManager = new LinkManager($chainProvider, 'Mremi\UrlShortener\Model\Link');
+
+$shortened = $linkManager->findOneByProviderAndShortUrl('bitly', 'http://bit.ly/ze6poY');
+
+$expanded = $linkManager->findOneByProviderAndLongUrl('google', 'http://www.google.com');
 ```

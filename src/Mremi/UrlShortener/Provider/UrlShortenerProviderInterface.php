@@ -2,6 +2,8 @@
 
 namespace Mremi\UrlShortener\Provider;
 
+use Mremi\UrlShortener\Model\LinkInterface;
+
 /**
  * Url shortener provider interface
  *
@@ -19,22 +21,18 @@ interface UrlShortenerProviderInterface
     /**
      * Shortens the long given URL
      *
-     * @param string $longUrl URL to shorten
-     *
-     * @return \Mremi\UrlShortener\Model\LinkInterface
+     * @param LinkInterface $link A link instance
      *
      * @throws \Mremi\UrlShortener\Exception\InvalidApiResponseException
      */
-    public function shorten($longUrl);
+    public function shorten(LinkInterface $link);
 
     /**
      * Expands the short given URL
      *
-     * @param string $shortUrl URL to expand
-     *
-     * @return \Mremi\UrlShortener\Model\LinkInterface
+     * @param LinkInterface $link A link instance
      *
      * @throws \Mremi\UrlShortener\Exception\InvalidApiResponseException
      */
-    public function expand($shortUrl);
+    public function expand(LinkInterface $link);
 }

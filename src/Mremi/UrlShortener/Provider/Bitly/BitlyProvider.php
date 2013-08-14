@@ -4,7 +4,7 @@ namespace Mremi\UrlShortener\Provider\Bitly;
 
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Http\ClientFactoryInterface;
-use Mremi\UrlShortener\Model\LinkManagerInterface;
+use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
@@ -22,11 +22,6 @@ class BitlyProvider implements UrlShortenerProviderInterface
     private $clientFactory;
 
     /**
-     * @var LinkManagerInterface
-     */
-    private $linkManager;
-
-    /**
      * @var AuthenticationInterface
      */
     private $auth;
@@ -40,14 +35,12 @@ class BitlyProvider implements UrlShortenerProviderInterface
      * Constructor
      *
      * @param ClientFactoryInterface  $clientFactory A client factory instance
-     * @param LinkManagerInterface    $linkManager   A link manager instance
      * @param AuthenticationInterface $auth          An authentication instance
      * @param array                   $options       An array of options used to do the shorten/expand request
      */
-    public function __construct(ClientFactoryInterface $clientFactory, LinkManagerInterface $linkManager, AuthenticationInterface $auth, array $options = array())
+    public function __construct(ClientFactoryInterface $clientFactory, AuthenticationInterface $auth, array $options = array())
     {
         $this->clientFactory = $clientFactory;
-        $this->linkManager   = $linkManager;
         $this->auth          = $auth;
         $this->options       = $options;
     }
@@ -63,53 +56,47 @@ class BitlyProvider implements UrlShortenerProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @param string $longUrl URL to shorten
-     * @param string $domain  The domain to use, optional (bit.ly | j.mp | bitly.com)
+     * @param LinkInterface $link   A link instance
+     * @param string        $domain The domain to use, optional (bit.ly | j.mp | bitly.com)
+     *
+     * @throws InvalidApiResponseException
      */
-    public function shorten($longUrl, $domain = null)
+    public function shorten(LinkInterface $link, $domain = null)
     {
         $client = $this->clientFactory->create(self::API_BASE_URL);
 
         $request = $client->get(sprintf('/v3/shorten?access_token=%s&longUrl=%s&domain=%s',
             $this->auth->getAccessToken(),
-            urlencode($longUrl),
+            urlencode($link->getLongUrl()),
             $domain
         ), array(), $this->options);
 
         $response = $this->validate($request->send()->getBody(true));
 
-        $link = $this->linkManager->create();
-        $link->setProviderName($this->getName());
         $link->setShortUrl($response->data->url);
-        $link->setLongUrl($longUrl);
-
-        return $link;
     }
 
     /**
      * {@inheritdoc}
      *
-     * @param string $shortUrl URL to expand
-     * @param string $hash     A Bit.ly hash
+     * @param LinkInterface $link A link instance
+     * @param string        $hash A Bit.ly hash
+     *
+     * @throws InvalidApiResponseException
      */
-    public function expand($shortUrl, $hash = null)
+    public function expand(LinkInterface $link, $hash = null)
     {
         $client = $this->clientFactory->create(self::API_BASE_URL);
 
         $request = $client->get(sprintf('/v3/expand?access_token=%s&shortUrl=%s&hash=%s',
             $this->auth->getAccessToken(),
-            urlencode($shortUrl),
+            urlencode($link->getShortUrl()),
             $hash
         ), array(), $this->options);
 
         $response = $this->validate($request->send()->getBody(true));
 
-        $link = $this->linkManager->create();
-        $link->setProviderName($this->getName());
-        $link->setShortUrl($shortUrl);
         $link->setLongUrl($response->data->expand[0]->long_url);
-
-        return $link;
     }
 
     /**
