@@ -12,6 +12,18 @@ use Mremi\UrlShortener\Provider\ChainProvider;
 class ChainProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Tests that an unknown provider throws an exception
+     *
+     * @expectedException        \RuntimeException
+     * @expectedExceptionMessage Unable to retrieve the provider named: "foo"
+     */
+    public function testUnknownProvider()
+    {
+        $chainProvider = new ChainProvider;
+        $chainProvider->getProvider('foo');
+    }
+
+    /**
      * Tests to add and get some providers
      */
     public function testAddAndGetProviders()
@@ -31,6 +43,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($bitlyProvider, $chainProvider->getProvider('bitly'));
         $this->assertArrayHasKey('bitly', $chainProvider->getProviders());
+        $this->assertTrue($chainProvider->hasProvider('bitly'));
         $this->assertCount(1, $chainProvider->getProviders());
 
         $googleProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Google\GoogleProvider')
@@ -46,6 +59,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($googleProvider, $chainProvider->getProvider('google'));
         $this->assertArrayHasKey('google', $chainProvider->getProviders());
+        $this->assertTrue($chainProvider->hasProvider('google'));
         $this->assertCount(2, $chainProvider->getProviders());
     }
 }

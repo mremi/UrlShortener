@@ -35,7 +35,7 @@ class ChainProvider
      */
     public function getProvider($name)
     {
-        if (!array_key_exists($name, $this->providers)) {
+        if (!$this->hasProvider($name)) {
             throw new \RuntimeException(sprintf('Unable to retrieve the provider named: "%s"', $name));
         }
 
@@ -50,5 +50,17 @@ class ChainProvider
     public function getProviders()
     {
         return $this->providers;
+    }
+
+    /**
+     * Returns TRUE whether the given name identifies a configured provider
+     *
+     * @param string $name A provider name
+     *
+     * @return boolean
+     */
+    public function hasProvider($name)
+    {
+        return array_key_exists($name, $this->providers);
     }
 }
