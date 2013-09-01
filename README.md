@@ -16,6 +16,7 @@ This library allows you to shorten a URL, reverse is also possible.
 * [Google API](#google-api)
 * [Chain providers](#chain-providers)
 * [Retrieve link](#retrieve-link)
+* [Contribution](#contribution)
 
 <a name="installation"></a>
 
@@ -134,3 +135,16 @@ $shortened = $linkManager->findOneByProviderAndShortUrl('bitly', 'http://bit.ly/
 
 $expanded = $linkManager->findOneByProviderAndLongUrl('google', 'http://www.google.com');
 ```
+
+<a name="contribution"></a>
+
+## Contribution
+
+Any question or feedback? Open an issue and I will try to reply quickly.
+
+A feature is missing here? Feel free to create a pull request to solve it!
+
+I hope this has been useful and has helped you. If so, share it and recommend
+it! :)
+
+[@mremitsme](https://twitter.com/mremitsme)
