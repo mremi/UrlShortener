@@ -8,6 +8,8 @@ This library allows you to shorten a URL, reverse is also possible.
 [![Build Status](https://api.travis-ci.org/mremi/UrlShortener.png?branch=master)](https://travis-ci.org/mremi/UrlShortener)
 [![Total Downloads](https://poser.pugx.org/mremi/url-shortener/downloads.png)](https://packagist.org/packages/mremi/url-shortener)
 [![Latest Stable Version](https://poser.pugx.org/mremi/url-shortener/v/stable.png)](https://packagist.org/packages/mremi/url-shortener)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/mremi/UrlShortener/badges/quality-score.png?s=34c4ba6b0cd272673fa121c32a63e1ce668b9b2a)](https://scrutinizer-ci.com/g/mremi/UrlShortener/)
+[![Code Coverage](https://scrutinizer-ci.com/g/mremi/UrlShortener/badges/coverage.png?s=7a8c3388ae7b50f35fd548b4b7874526c634e8c5)](https://scrutinizer-ci.com/g/mremi/UrlShortener/)
 
 **Basic Docs**
 
