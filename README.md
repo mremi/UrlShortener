@@ -127,7 +127,7 @@ You can retrieve some links using these finders:
 
 use Mremi\UrlShortener\Model\LinkManager;
 
-$linkManager = new LinkManager($chainProvider, 'Mremi\UrlShortener\Model\Link');
+$linkManager = new LinkManager($chainProvider);
 
 $shortened = $linkManager->findOneByProviderAndShortUrl('bitly', 'http://bit.ly/ze6poY');
 

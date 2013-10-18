@@ -34,9 +34,9 @@ class LinkManager implements LinkManagerInterface
      * Constructor
      *
      * @param ChainProvider $chainProvider A chain provider instance
-     * @param string        $class         The Link class namespace
+     * @param string        $class         The Link class namespace, optional
      */
-    public function __construct(ChainProvider $chainProvider, $class)
+    public function __construct(ChainProvider $chainProvider, $class = 'Mremi\UrlShortener\Model\Link')
     {
         $this->chainProvider = $chainProvider;
         $this->class         = $class;
