@@ -11,8 +11,9 @@
 
 namespace Mremi\UrlShortener\Provider\Google;
 
+use Guzzle\Http\Client;
+
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
-use Mremi\UrlShortener\Http\ClientFactoryInterface;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
@@ -23,13 +24,6 @@ use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
  */
 class GoogleProvider implements UrlShortenerProviderInterface
 {
-    const API_URL = 'https://www.googleapis.com/urlshortener/v1/url';
-
-    /**
-     * @var ClientFactoryInterface
-     */
-    private $clientFactory;
-
     /**
      * @var string
      */
@@ -43,15 +37,13 @@ class GoogleProvider implements UrlShortenerProviderInterface
     /**
      * Constructor
      *
-     * @param ClientFactoryInterface $clientFactory A client factory instance
-     * @param string                 $apiKey        A Google API key, optional
-     * @param array                  $options       An array of options used to do the shorten/expand request
+     * @param string $apiKey  A Google API key, optional
+     * @param array  $options An array of options used to do the shorten/expand request
      */
-    public function __construct(ClientFactoryInterface $clientFactory, $apiKey = null, array $options = array())
+    public function __construct($apiKey = null, array $options = array())
     {
-        $this->clientFactory = $clientFactory;
-        $this->apiKey        = $apiKey;
-        $this->options       = $options;
+        $this->apiKey  = $apiKey;
+        $this->options = $options;
     }
 
     /**
@@ -67,7 +59,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
      */
     public function shorten(LinkInterface $link)
     {
-        $client = $this->clientFactory->create(self::API_URL);
+        $client = $this->createClient();
 
         $request = $client->post($this->getUri(), array(
             'Content-Type' => 'application/json'
@@ -85,7 +77,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
      */
     public function expand(LinkInterface $link)
     {
-        $client = $this->clientFactory->create(self::API_URL);
+        $client = $this->createClient();
 
         $request = $client->get($this->getUri(array(
             'shortUrl' => $link->getShortUrl(),
@@ -94,6 +86,19 @@ class GoogleProvider implements UrlShortenerProviderInterface
         $response = $this->validate($request->send()->getBody(true), true);
 
         $link->setLongUrl($response->longUrl);
+    }
+
+    /**
+     * Creates a client.
+     *
+     * This method is mocked in unit tests in order to not make a real request,
+     * so visibility must be protected or public.
+     *
+     * @return Client
+     */
+    protected function createClient()
+    {
+        return new Client('https://www.googleapis.com/urlshortener/v1/url');
     }
 
     /**

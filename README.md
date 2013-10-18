@@ -53,7 +53,6 @@ Composer will install the library to your project's `vendor/mremi` directory.
 ```php
 <?php
 
-use Mremi\UrlShortener\Http\ClientFactory;
 use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
@@ -62,8 +61,7 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $bitlyProvider = new BitlyProvider(
-    new ClientFactory,
-    new OAuthClient(new ClientFactory, 'username', 'password'),
+    new OAuthClient('username', 'password'),
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
@@ -79,7 +77,6 @@ $bitlyProvider->expand($link);
 ```php
 <?php
 
-use Mremi\UrlShortener\Http\ClientFactory;
 use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
@@ -87,7 +84,6 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $googleProvider = new GoogleProvider(
-    new ClientFactory,
     'api_key',
     array('connect_timeout' => 1, 'timeout' => 1)
 );

@@ -21,6 +21,11 @@ use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 class BitlyProviderTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var object
+     */
+    private $provider;
+
+    /**
      * Tests the shorten method throws exception if Bit.ly returns a string
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
@@ -28,8 +33,9 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfApiResponseIsString()
     {
-        $provider = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsString()), $this->getMockAuthentication());
-        $provider->shorten($this->getBaseMockLink());
+        $this->mockClient($this->getMockResponseAsString());
+
+        $this->provider->shorten($this->getBaseMockLink());
     }
 
     /**
@@ -40,8 +46,9 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoStatusCode()
     {
-        $provider = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsInvalidObject()), $this->getMockAuthentication());
-        $provider->shorten($this->getBaseMockLink());
+        $this->mockClient($this->getMockResponseAsInvalidObject());
+
+        $this->provider->shorten($this->getBaseMockLink());
     }
 
     /**
@@ -52,8 +59,9 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
      */
     public function testShortenThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
-        $provider = new BitlyProvider($this->getMockClientFactory($this->getMockResponseWithInvalidStatusCode()), $this->getMockAuthentication());
-        $provider->shorten($this->getBaseMockLink());
+        $this->mockClient($this->getMockResponseWithInvalidStatusCode());
+
+        $this->provider->shorten($this->getBaseMockLink());
     }
 
     /**
@@ -88,9 +96,9 @@ JSON;
             ->method('setShortUrl')
             ->with($this->equalTo('http://bit.ly/ze6poY'));
 
-        $provider = new BitlyProvider($this->getMockClientFactory($response), $this->getMockAuthentication());
+        $this->mockClient($response);
 
-        $provider->shorten($link);
+        $this->provider->shorten($link);
     }
 
     /**
@@ -101,8 +109,9 @@ JSON;
      */
     public function testExpandThrowsExceptionIfApiResponseIsString()
     {
-        $provider = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsString()), $this->getMockAuthentication());
-        $provider->expand($this->getBaseMockLink());
+        $this->mockClient($this->getMockResponseAsString());
+
+        $this->provider->expand($this->getBaseMockLink());
     }
 
     /**
@@ -113,8 +122,9 @@ JSON;
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoStatusCode()
     {
-        $provider = new BitlyProvider($this->getMockClientFactory($this->getMockResponseAsInvalidObject()), $this->getMockAuthentication());
-        $provider->expand($this->getBaseMockLink());
+        $this->mockClient($this->getMockResponseAsInvalidObject());
+
+        $this->provider->expand($this->getBaseMockLink());
     }
 
     /**
@@ -125,8 +135,9 @@ JSON;
      */
     public function testExpandThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
-        $provider = new BitlyProvider($this->getMockClientFactory($this->getMockResponseWithInvalidStatusCode()), $this->getMockAuthentication());
-        $provider->expand($this->getBaseMockLink());
+        $this->mockClient($this->getMockResponseWithInvalidStatusCode());
+
+        $this->provider->expand($this->getBaseMockLink());
     }
 
     /**
@@ -164,9 +175,30 @@ JSON;
             ->method('setLongUrl')
             ->with($this->equalTo('http://www.google.com/'));
 
-        $provider = new BitlyProvider($this->getMockClientFactory($response), $this->getMockAuthentication());
+        $this->mockClient($response);
 
-        $provider->expand($link);
+        $this->provider->expand($link);
+    }
+
+    /**
+     * Initializes the provider
+     */
+    protected function setUp()
+    {
+        $auth = $this->getMock('Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface');
+
+        $this->provider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Bitly\BitlyProvider')
+            ->setConstructorArgs(array($auth))
+            ->setMethods(array('createClient'))
+            ->getMock();
+    }
+
+    /**
+     * Cleanups the provider
+     */
+    protected function tearDown()
+    {
+        unset($this->provider);
     }
 
     /**
@@ -259,13 +291,11 @@ JSON;
     }
 
     /**
-     * Gets mock of client factory
+     * Mocks the client
      *
      * @param object $response
-     *
-     * @return object
      */
-    private function getMockClientFactory($response)
+    private function mockClient($response)
     {
         $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
         $request
@@ -279,23 +309,10 @@ JSON;
             ->method('get')
             ->will($this->returnValue($request));
 
-        $clientFactory = $this->getMock('Mremi\UrlShortener\Http\ClientFactoryInterface');
-        $clientFactory
+        $this->provider
             ->expects($this->once())
-            ->method('create')
+            ->method('createClient')
             ->will($this->returnValue($client));
-
-        return $clientFactory;
-    }
-
-    /**
-     * Gets mock of authentication
-     *
-     * @return object
-     */
-    private function getMockAuthentication()
-    {
-        return $this->getMock('Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface');
     }
 
     /**

@@ -11,8 +11,9 @@
 
 namespace Mremi\UrlShortener\Provider\Bitly;
 
+use Guzzle\Http\Client;
+
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
-use Mremi\UrlShortener\Http\ClientFactoryInterface;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
@@ -23,13 +24,6 @@ use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
  */
 class BitlyProvider implements UrlShortenerProviderInterface
 {
-    const API_BASE_URL = 'https://api-ssl.bitly.com';
-
-    /**
-     * @var ClientFactoryInterface
-     */
-    private $clientFactory;
-
     /**
      * @var AuthenticationInterface
      */
@@ -43,15 +37,13 @@ class BitlyProvider implements UrlShortenerProviderInterface
     /**
      * Constructor
      *
-     * @param ClientFactoryInterface  $clientFactory A client factory instance
-     * @param AuthenticationInterface $auth          An authentication instance
-     * @param array                   $options       An array of options used to do the shorten/expand request
+     * @param AuthenticationInterface $auth    An authentication instance
+     * @param array                   $options An array of options used to do the shorten/expand request
      */
-    public function __construct(ClientFactoryInterface $clientFactory, AuthenticationInterface $auth, array $options = array())
+    public function __construct(AuthenticationInterface $auth, array $options = array())
     {
-        $this->clientFactory = $clientFactory;
-        $this->auth          = $auth;
-        $this->options       = $options;
+        $this->auth    = $auth;
+        $this->options = $options;
     }
 
     /**
@@ -72,7 +64,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
      */
     public function shorten(LinkInterface $link, $domain = null)
     {
-        $client = $this->clientFactory->create(self::API_BASE_URL);
+        $client = $this->createClient();
 
         $request = $client->get(sprintf('/v3/shorten?access_token=%s&longUrl=%s&domain=%s',
             $this->auth->getAccessToken(),
@@ -95,7 +87,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
      */
     public function expand(LinkInterface $link, $hash = null)
     {
-        $client = $this->clientFactory->create(self::API_BASE_URL);
+        $client = $this->createClient();
 
         $request = $client->get(sprintf('/v3/expand?access_token=%s&shortUrl=%s&hash=%s',
             $this->auth->getAccessToken(),
@@ -106,6 +98,19 @@ class BitlyProvider implements UrlShortenerProviderInterface
         $response = $this->validate($request->send()->getBody(true));
 
         $link->setLongUrl($response->data->expand[0]->long_url);
+    }
+
+    /**
+     * Creates a client.
+     *
+     * This method is mocked in unit tests in order to not make a real request,
+     * so visibility must be protected or public.
+     *
+     * @return Client
+     */
+    protected function createClient()
+    {
+        return new Client('https://api-ssl.bitly.com');
     }
 
     /**
