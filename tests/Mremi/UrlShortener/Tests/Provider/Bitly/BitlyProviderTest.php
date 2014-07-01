@@ -198,7 +198,7 @@ JSON;
      */
     protected function tearDown()
     {
-        unset($this->provider);
+        $this->provider = null;
     }
 
     /**
