@@ -13,7 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "guzzle/guzzle": "~3.7"
+        "guzzle/guzzle": "~3.7",
+        "symfony/console": "~2.5"
     },
     "autoload": {
         "psr-0": { "Mremi\\UrlShortener": "src" }

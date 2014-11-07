@@ -70,6 +70,40 @@ $bitlyProvider->shorten($link);
 $bitlyProvider->expand($link);
 ```
 
+You can also use the commands provided by this library, look at the help message:
+
+```bash
+$ bin/shortener bitly:shorten --help
+```
+
+Some arguments are mandatory:
+
+```bash
+$ bin/shortener bitly:shorten username password http://www.google.com
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener bitly:shorten username password http://www.google.com --options='{"connect_timeout":1,"timeout":1}'
+```
+
+```bash
+$ bin/shortener bitly:expand --help
+```
+
+Some arguments are mandatory:
+
+```bash
+$ bin/shortener bitly:expand username password http://bit.ly/ze6poY
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener bitly:expand username password http://bit.ly/ze6poY --options='{"connect_timeout":1,"timeout":1}'
+```
+
 <a name="google-api"></a>
 
 ## Google API
@@ -91,6 +125,50 @@ $googleProvider = new GoogleProvider(
 $googleProvider->shorten($link);
 
 $googleProvider->expand($link);
+```
+
+You can also use the commands provided by this library, look at the help message:
+
+```bash
+$ bin/shortener google:shorten --help
+```
+
+Only one argument is mandatory (the long URL) but you can also provide a Google
+API key:
+
+```bash
+$ bin/shortener google:shorten http://www.google.com
+```
+
+```bash
+$ bin/shortener google:shorten http://www.google.com api_key
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener google:shorten http://www.google.com --options='{"connect_timeout":1,"timeout":1}'
+```
+
+```bash
+$ bin/shortener google:expand --help
+```
+
+Only one argument is mandatory (the short URL) but you can also provide a
+Google API key:
+
+```bash
+$ bin/shortener google:expand http://goo.gl/fbsS
+```
+
+```bash
+$ bin/shortener google:expand http://goo.gl/fbsS api_key
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener google:expand http://goo.gl/fbsS --options='{"connect_timeout":1,"timeout":1}'
 ```
 
 <a name="chain-providers"></a>
