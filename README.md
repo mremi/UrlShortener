@@ -50,6 +50,8 @@ Composer will install the library to your project's `vendor/mremi` directory.
 
 ## Bit.ly API
 
+### Shorten
+
 ```php
 <?php
 
@@ -66,8 +68,6 @@ $bitlyProvider = new BitlyProvider(
 );
 
 $bitlyProvider->shorten($link);
-
-$bitlyProvider->expand($link);
 ```
 
 You can also use the commands provided by this library, look at the help message:
@@ -86,6 +86,26 @@ Some options are available:
 
 ```bash
 $ bin/shortener bitly:shorten username password http://www.google.com --options='{"connect_timeout":1,"timeout":1}'
+```
+
+### Expand
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
+use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
+
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
+
+$bitlyProvider = new BitlyProvider(
+    new OAuthClient('username', 'password'),
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$bitlyProvider->expand($link);
 ```
 
 ```bash
@@ -108,6 +128,8 @@ $ bin/shortener bitly:expand username password http://bit.ly/ze6poY --options='{
 
 ## Google API
 
+### Shorten
+
 ```php
 <?php
 
@@ -123,8 +145,6 @@ $googleProvider = new GoogleProvider(
 );
 
 $googleProvider->shorten($link);
-
-$googleProvider->expand($link);
 ```
 
 You can also use the commands provided by this library, look at the help message:
@@ -148,6 +168,25 @@ Some options are available:
 
 ```bash
 $ bin/shortener google:shorten http://www.google.com --options='{"connect_timeout":1,"timeout":1}'
+```
+
+### Expand
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Google\GoogleProvider;
+
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
+
+$googleProvider = new GoogleProvider(
+    'api_key',
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$googleProvider->expand($link);
 ```
 
 ```bash

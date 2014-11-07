@@ -39,8 +39,8 @@ class BitlyExpandCommand extends Command
             ->setName('bitly:expand')
             ->setDescription('Expands the short given URL using the Bitly API')
 
-            ->addArgument('username', InputArgument::REQUIRED, 'A valid Bitly username')
-            ->addArgument('password', InputArgument::REQUIRED, 'A valid Bitly password')
+            ->addArgument('username',  InputArgument::REQUIRED, 'A valid Bitly username')
+            ->addArgument('password',  InputArgument::REQUIRED, 'A valid Bitly password')
             ->addArgument('short-url', InputArgument::REQUIRED, 'The short URL to expand')
 
             ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
