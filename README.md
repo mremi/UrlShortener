@@ -63,7 +63,7 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $bitlyProvider = new BitlyProvider(
-    new OAuthClient('username', 'password'),
+    new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
@@ -101,7 +101,7 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $bitlyProvider = new BitlyProvider(
-    new OAuthClient('username', 'password'),
+    new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
