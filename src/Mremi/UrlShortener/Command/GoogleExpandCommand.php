@@ -13,7 +13,6 @@ namespace Mremi\UrlShortener\Command;
 
 use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,7 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Expands the short given URL using the Google API
+ * Expands the short given URL using the Google API.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
@@ -49,7 +48,7 @@ class GoogleExpandCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $link = new Link;
+        $link = new Link();
         $link->setShortUrl($input->getArgument('short-url'));
 
         $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();

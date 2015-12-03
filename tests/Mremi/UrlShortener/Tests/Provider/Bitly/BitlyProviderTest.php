@@ -14,7 +14,7 @@ namespace Mremi\UrlShortener\Tests\Provider\Bitly;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 
 /**
- * Tests BitlyProvider class
+ * Tests BitlyProvider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
@@ -26,7 +26,7 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * Tests the shorten method throws exception if Bit.ly returns a string
+     * Tests the shorten method throws exception if Bit.ly returns a string.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly response is probably mal-formed because cannot be json-decoded.
@@ -39,7 +39,7 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method throws exception if Bit.ly returns a response with no status_code
+     * Tests the shorten method throws exception if Bit.ly returns a response with no status_code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "status_code" does not exist within Bit.ly response.
@@ -52,7 +52,7 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method throws exception if Bit.ly returns an invalid status code
+     * Tests the shorten method throws exception if Bit.ly returns an invalid status code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly returned status code "500" with message "KO"
@@ -65,7 +65,7 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method with a valid Bit.ly's response
+     * Tests the shorten method with a valid Bit.ly's response.
      */
     public function testShortenWithValidApiResponse()
     {
@@ -102,7 +102,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Bit.ly returns a string
+     * Tests the expand method throws exception if Bit.ly returns a string.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly response is probably mal-formed because cannot be json-decoded.
@@ -115,7 +115,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Bit.ly returns a response with no status_code
+     * Tests the expand method throws exception if Bit.ly returns a response with no status_code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "status_code" does not exist within Bit.ly response.
@@ -128,7 +128,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Bit.ly returns an invalid status code
+     * Tests the expand method throws exception if Bit.ly returns an invalid status code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Bit.ly returned status code "500" with message "KO"
@@ -141,7 +141,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method with a valid Bit.ly's response
+     * Tests the expand method with a valid Bit.ly's response.
      */
     public function testExpandWithValidApiResponse()
     {
@@ -181,7 +181,7 @@ JSON;
     }
 
     /**
-     * Initializes the provider
+     * Initializes the provider.
      */
     protected function setUp()
     {
@@ -194,7 +194,7 @@ JSON;
     }
 
     /**
-     * Cleanups the provider
+     * Cleanups the provider.
      */
     protected function tearDown()
     {
@@ -202,7 +202,7 @@ JSON;
     }
 
     /**
-     * Gets mock of response
+     * Gets mock of response.
      *
      * @return object
      */
@@ -214,7 +214,7 @@ JSON;
     }
 
     /**
-     * Returns an invalid response string
+     * Returns an invalid response string.
      *
      * @return object
      */
@@ -231,7 +231,7 @@ JSON;
     }
 
     /**
-     * Returns an invalid response object
+     * Returns an invalid response object.
      *
      * @return object
      */
@@ -260,7 +260,7 @@ JSON;
     }
 
     /**
-     * Returns a response with an invalid status code
+     * Returns a response with an invalid status code.
      *
      * @return object
      */
@@ -291,7 +291,7 @@ JSON;
     }
 
     /**
-     * Mocks the client
+     * Mocks the client.
      *
      * @param object $response
      */
@@ -316,7 +316,7 @@ JSON;
     }
 
     /**
-     * Gets mock of link
+     * Gets mock of link.
      *
      * @return object
      */
@@ -326,7 +326,7 @@ JSON;
     }
 
     /**
-     * Gets mock of short link
+     * Gets mock of short link.
      *
      * @return object
      */
@@ -343,7 +343,7 @@ JSON;
     }
 
     /**
-     * Gets mock of long link
+     * Gets mock of long link.
      *
      * @return object
      */

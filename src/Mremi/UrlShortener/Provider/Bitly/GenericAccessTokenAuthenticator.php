@@ -12,7 +12,7 @@
 namespace Mremi\UrlShortener\Provider\Bitly;
 
 /**
- * GenericAccessTokenAuthenticator class
+ * GenericAccessTokenAuthenticator class.
  *
  * @author Marcus Sá <marcusesa@gmail.com>
  */
@@ -24,7 +24,7 @@ class GenericAccessTokenAuthenticator implements AuthenticationInterface
     private $genericAccessToken;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $genericAccessToken generic access token is a immutable token provided by Bitly
      */
@@ -34,7 +34,7 @@ class GenericAccessTokenAuthenticator implements AuthenticationInterface
     }
 
     /**
-     * Return the Generic Access Token
+     * Return the Generic Access Token.
      *
      * @return string
      */

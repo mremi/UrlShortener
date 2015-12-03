@@ -14,7 +14,7 @@ namespace Mremi\UrlShortener\Provider\Bitly;
 use Guzzle\Http\Client;
 
 /**
- * OAuth client class
+ * OAuth client class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
@@ -31,7 +31,7 @@ class OAuthClient implements AuthenticationInterface
     private $password;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $username A valid Bit.ly username
      * @param string $password A valid Bit.ly password

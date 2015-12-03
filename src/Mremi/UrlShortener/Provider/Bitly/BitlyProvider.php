@@ -12,13 +12,12 @@
 namespace Mremi\UrlShortener\Provider\Bitly;
 
 use Guzzle\Http\Client;
-
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
- * Bit.ly provider class
+ * Bit.ly provider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
@@ -35,7 +34,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
     private $options;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param AuthenticationInterface $auth    An authentication instance
      * @param array                   $options An array of options used to do the shorten/expand request
@@ -114,7 +113,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
     }
 
     /**
-     * Validates the Bit.ly's response and returns it whether the status code is 200
+     * Validates the Bit.ly's response and returns it whether the status code is 200.
      *
      * @param string $apiRawResponse
      *

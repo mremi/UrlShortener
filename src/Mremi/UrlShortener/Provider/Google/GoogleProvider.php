@@ -12,13 +12,12 @@
 namespace Mremi\UrlShortener\Provider\Google;
 
 use Guzzle\Http\Client;
-
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
- * Google provider class
+ * Google provider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
@@ -35,7 +34,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
     private $options;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $apiKey  A Google API key, optional
      * @param array  $options An array of options used to do the shorten/expand request
@@ -62,7 +61,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $request = $client->post($this->getUri(), array(
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ), json_encode(array(
             'longUrl' => $link->getLongUrl(),
         )), $this->options);
@@ -102,7 +101,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
     }
 
     /**
-     * Gets the URI
+     * Gets the URI.
      *
      * @param array $parameters An array of parameters, optional
      *
@@ -115,17 +114,17 @@ class GoogleProvider implements UrlShortenerProviderInterface
         }
 
         if (0 === count($parameters)) {
-            return null;
+            return;
         }
 
         return sprintf('?%s', http_build_query($parameters));
     }
 
     /**
-     * Validates the Google's response and returns it whether the status code is 200
+     * Validates the Google's response and returns it whether the status code is 200.
      *
-     * @param string  $apiRawResponse An API response, as it returned
-     * @param boolean $checkStatus    TRUE whether the status code has to be checked, default FALSE
+     * @param string $apiRawResponse An API response, as it returned
+     * @param bool   $checkStatus    TRUE whether the status code has to be checked, default FALSE
      *
      * @return object
      *

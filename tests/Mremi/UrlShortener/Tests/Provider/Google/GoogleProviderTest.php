@@ -14,7 +14,7 @@ namespace Mremi\UrlShortener\Tests\Provider\Google;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
 /**
- * Tests GoogleProvider class
+ * Tests GoogleProvider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
@@ -26,7 +26,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * Tests the getUri method with no API key and no parameters
+     * Tests the getUri method with no API key and no parameters.
      */
     public function testGetUriWithNoApiKeyAndNoParameters()
     {
@@ -39,7 +39,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the getUri method with no API key and some parameters
+     * Tests the getUri method with no API key and some parameters.
      */
     public function testGetUriWithNoApiKeyAndSomeParameters()
     {
@@ -48,11 +48,11 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
 
         $uri = $method->invoke($this->provider, array('foo' => 'bar'));
 
-        $this->assertEquals('?foo=bar', $uri);
+        $this->assertSame('?foo=bar', $uri);
     }
 
     /**
-     * Tests the getUri method with API key and no parameters
+     * Tests the getUri method with API key and no parameters.
      */
     public function testGetUriWithApiKeyAndNoParameters()
     {
@@ -63,11 +63,11 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
 
         $uri = $method->invoke($provider);
 
-        $this->assertEquals('?key=secret', $uri);
+        $this->assertSame('?key=secret', $uri);
     }
 
     /**
-     * Tests the getUri method with API key and some parameters
+     * Tests the getUri method with API key and some parameters.
      */
     public function testGetUriWithApiKeyAndSomeParameters()
     {
@@ -78,11 +78,11 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
 
         $uri = $method->invoke($provider, array('foo' => 'bar'));
 
-        $this->assertEquals('?foo=bar&key=secret', $uri);
+        $this->assertSame('?foo=bar&key=secret', $uri);
     }
 
     /**
-     * Tests the shorten method throws exception if Google returns a string
+     * Tests the shorten method throws exception if Google returns a string.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Google response is probably mal-formed because cannot be json-decoded.
@@ -95,7 +95,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method throws exception if Google returns an error response
+     * Tests the shorten method throws exception if Google returns an error response.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Google returned status code "400" with message "Required"
@@ -108,7 +108,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method throws exception if Google returns a response with no id
+     * Tests the shorten method throws exception if Google returns a response with no id.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "id" does not exist within Google response.
@@ -121,7 +121,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method throws exception if Google returns a response with no longUrl
+     * Tests the shorten method throws exception if Google returns a response with no longUrl.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "longUrl" does not exist within Google response.
@@ -134,7 +134,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method with a valid Google's response
+     * Tests the shorten method with a valid Google's response.
      */
     public function testShortenWithValidApiResponse()
     {
@@ -165,7 +165,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Google returns a string
+     * Tests the expand method throws exception if Google returns a string.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Google response is probably mal-formed because cannot be json-decoded.
@@ -178,7 +178,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Google returns an error response
+     * Tests the expand method throws exception if Google returns an error response.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Google returned status code "400" with message "Required"
@@ -191,7 +191,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Google returns a response with no id
+     * Tests the expand method throws exception if Google returns a response with no id.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "id" does not exist within Google response.
@@ -204,7 +204,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Google returns a response with no longUrl
+     * Tests the expand method throws exception if Google returns a response with no longUrl.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "longUrl" does not exist within Google response.
@@ -217,7 +217,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Google returns a response with no status
+     * Tests the expand method throws exception if Google returns a response with no status.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Property "status" does not exist within Google response.
@@ -245,7 +245,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Google returns an invalid status code
+     * Tests the expand method throws exception if Google returns an invalid status code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Google returned status code "KO".
@@ -274,7 +274,7 @@ JSON;
     }
 
     /**
-     * Tests the expand method with a valid Google's response
+     * Tests the expand method with a valid Google's response.
      */
     public function testExpandWithValidApiResponse()
     {
@@ -306,7 +306,7 @@ JSON;
     }
 
     /**
-     * Initializes the provider
+     * Initializes the provider.
      */
     protected function setUp()
     {
@@ -316,7 +316,7 @@ JSON;
     }
 
     /**
-     * Cleanups the provider
+     * Cleanups the provider.
      */
     protected function tearDown()
     {
@@ -324,7 +324,7 @@ JSON;
     }
 
     /**
-     * Gets a mocked response
+     * Gets a mocked response.
      *
      * @return object
      */
@@ -336,7 +336,7 @@ JSON;
     }
 
     /**
-     * Returns an invalid response string
+     * Returns an invalid response string.
      *
      * @return object
      */
@@ -353,7 +353,7 @@ JSON;
     }
 
     /**
-     * Returns a response object with "error" node
+     * Returns a response object with "error" node.
      *
      * @return object
      */
@@ -388,7 +388,7 @@ JSON;
     }
 
     /**
-     * Returns a response object with no "id" node
+     * Returns a response object with no "id" node.
      *
      * @return object
      */
@@ -412,7 +412,7 @@ JSON;
     }
 
     /**
-     * Returns a response object with no "longUrl" node
+     * Returns a response object with no "longUrl" node.
      *
      * @return object
      */
@@ -436,7 +436,7 @@ JSON;
     }
 
     /**
-     * Mocks the client
+     * Mocks the client.
      *
      * @param object $response      A mocked response
      * @param string $requestMethod A request method (get|post)
@@ -462,7 +462,7 @@ JSON;
     }
 
     /**
-     * Gets mock of link
+     * Gets mock of link.
      *
      * @return object
      */
@@ -472,7 +472,7 @@ JSON;
     }
 
     /**
-     * Gets mock of short link
+     * Gets mock of short link.
      *
      * @return object
      */
@@ -489,7 +489,7 @@ JSON;
     }
 
     /**
-     * Gets mock of long link
+     * Gets mock of long link.
      *
      * @return object
      */
