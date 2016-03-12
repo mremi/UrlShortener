@@ -22,6 +22,13 @@
         "symfony/phpunit-bridge": "~2.7|~3.0"
     },
     "autoload": {
-        "psr-0": { "Mremi\\UrlShortener": "src" }
+        "psr-4": {
+            "Mremi\\UrlShortener\\": "src/Mremi/UrlShortener"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mremi\\UrlShortener\\Tests\\": "tests/Mremi/UrlShortener/Tests"
+        }
     }
 }
