@@ -98,7 +98,7 @@ use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\Bitly\OAuthClient;
 
 $link = new Link;
-$link->setLongUrl('http://www.google.com');
+$link->setShortUrl('http://goo.gl/fbsS');
 
 $bitlyProvider = new BitlyProvider(
     new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
@@ -179,7 +179,7 @@ use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 
 $link = new Link;
-$link->setLongUrl('http://www.google.com');
+$link->setShortUrl('http://goo.gl/fbsS');
 
 $googleProvider = new GoogleProvider(
     'api_key',
