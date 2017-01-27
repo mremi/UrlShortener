@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "guzzle/guzzle": "~3.7",
+        "php": "^5.5|^7.0",
+        "guzzlehttp/guzzle": "^6.0",
         "symfony/console": "~2.5"
     },
     "require-dev": {

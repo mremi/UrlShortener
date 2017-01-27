@@ -11,7 +11,7 @@
 
 namespace Mremi\UrlShortener\Provider\Google;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
@@ -60,13 +60,16 @@ class GoogleProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $request = $client->post($this->getUri(), array(
-            'Content-Type' => 'application/json',
-        ), json_encode(array(
-            'longUrl' => $link->getLongUrl(),
-        )), $this->options);
+        $response = $client->post($this->getUri(), array_merge(
+            array(
+                'json' => array(
+                    'longUrl' => $link->getLongUrl(),
+                ),
+            ),
+            $this->options
+        ));
 
-        $response = $this->validate($request->send()->getBody(true));
+        $response = $this->validate($response->getBody()->getContents());
 
         $link->setShortUrl($response->id);
     }
@@ -78,11 +81,11 @@ class GoogleProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $request = $client->get($this->getUri(array(
+        $response = $client->get($this->getUri(array(
             'shortUrl' => $link->getShortUrl(),
-        )), array(), $this->options);
+        )), $this->options);
 
-        $response = $this->validate($request->send()->getBody(true), true);
+        $response = $this->validate($response->getBody()->getContents(), true);
 
         $link->setLongUrl($response->longUrl);
     }
@@ -97,7 +100,9 @@ class GoogleProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client('https://www.googleapis.com/urlshortener/v1/url');
+        return new Client(array(
+            'base_uri' => 'https://www.googleapis.com/urlshortener/v1/url',
+        ));
     }
 
     /**

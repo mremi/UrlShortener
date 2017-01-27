@@ -71,7 +71,7 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->getBaseMockResponse();
 
-        $apiRawResponse = <<<JSON
+        $apiRawResponse = <<<'JSON'
 {
   "data": {
     "global_hash": "900913",
@@ -85,10 +85,16 @@ class BitlyProviderTest extends \PHPUnit_Framework_TestCase
 }
 JSON;
 
+        $stream = $this->getBaseMockStream();
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($apiRawResponse));
+
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue($apiRawResponse));
+            ->will($this->returnValue($stream));
 
         $link = $this->getMockLongLink();
         $link
@@ -147,7 +153,7 @@ JSON;
     {
         $response = $this->getBaseMockResponse();
 
-        $apiRawResponse = <<<JSON
+        $apiRawResponse = <<<'JSON'
 {
   "data": {
     "expand": [
@@ -164,10 +170,16 @@ JSON;
 }
 JSON;
 
+        $stream = $this->getBaseMockStream();
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($apiRawResponse));
+
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue($apiRawResponse));
+            ->will($this->returnValue($stream));
 
         $link = $this->getMockShortLink();
         $link
@@ -208,9 +220,17 @@ JSON;
      */
     private function getBaseMockResponse()
     {
-        return $this->getMockBuilder('Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->getMock('Psr\Http\Message\ResponseInterface');
+    }
+
+    /**
+     * Gets mock of stream.
+     *
+     * @return object
+     */
+    private function getBaseMockStream()
+    {
+        return $this->getMock('Psr\Http\Message\StreamInterface');
     }
 
     /**
@@ -220,12 +240,18 @@ JSON;
      */
     private function getMockResponseAsString()
     {
+        $stream = $this->getBaseMockStream();
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue('foo'));
+
         $response = $this->getBaseMockResponse();
 
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue('foo'));
+            ->will($this->returnValue($stream));
 
         return $response;
     }
@@ -239,7 +265,7 @@ JSON;
     {
         $response = $this->getBaseMockResponse();
 
-        $apiRawResponse = <<<JSON
+        $apiRawResponse = <<<'JSON'
 {
   "data": {
     "global_hash": "900913",
@@ -251,10 +277,16 @@ JSON;
 }
 JSON;
 
+        $stream = $this->getBaseMockStream();
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($apiRawResponse));
+
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue($apiRawResponse));
+            ->will($this->returnValue($stream));
 
         return $response;
     }
@@ -268,7 +300,7 @@ JSON;
     {
         $response = $this->getBaseMockResponse();
 
-        $apiRawResponse = <<<JSON
+        $apiRawResponse = <<<'JSON'
 {
   "data": {
     "global_hash": "900913",
@@ -282,10 +314,16 @@ JSON;
 }
 JSON;
 
+        $stream = $this->getBaseMockStream();
+        $stream
+            ->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue($apiRawResponse));
+
         $response
             ->expects($this->once())
             ->method('getBody')
-            ->will($this->returnValue($apiRawResponse));
+            ->will($this->returnValue($stream));
 
         return $response;
     }
@@ -297,17 +335,13 @@ JSON;
      */
     private function mockClient($response)
     {
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
-        $request
-            ->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($response));
-
-        $client = $this->getMock('Guzzle\Http\ClientInterface');
+        $client = $this->getMockBuilder('GuzzleHttp\ClientInterface')
+            ->setMethods(array('send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'))
+            ->getMock();
         $client
             ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($request));
+            ->will($this->returnValue($response));
 
         $this->provider
             ->expects($this->once())

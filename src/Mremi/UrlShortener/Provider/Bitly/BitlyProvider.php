@@ -11,7 +11,7 @@
 
 namespace Mremi\UrlShortener\Provider\Bitly;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
@@ -65,13 +65,13 @@ class BitlyProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $request = $client->get(sprintf('/v3/shorten?access_token=%s&longUrl=%s&domain=%s',
+        $response = $client->get(sprintf('/v3/shorten?access_token=%s&longUrl=%s&domain=%s',
             $this->auth->getAccessToken(),
             urlencode($link->getLongUrl()),
             $domain
-        ), array(), $this->options);
+        ), $this->options);
 
-        $response = $this->validate($request->send()->getBody(true));
+        $response = $this->validate($response->getBody()->getContents());
 
         $link->setShortUrl($response->data->url);
     }
@@ -88,13 +88,13 @@ class BitlyProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $request = $client->get(sprintf('/v3/expand?access_token=%s&shortUrl=%s&hash=%s',
+        $response = $client->get(sprintf('/v3/expand?access_token=%s&shortUrl=%s&hash=%s',
             $this->auth->getAccessToken(),
             urlencode($link->getShortUrl()),
             $hash
-        ), array(), $this->options);
+        ), $this->options);
 
-        $response = $this->validate($request->send()->getBody(true));
+        $response = $this->validate($response->getBody()->getContents());
 
         $link->setLongUrl($response->data->expand[0]->long_url);
     }
@@ -109,7 +109,9 @@ class BitlyProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client('https://api-ssl.bitly.com');
+        return new Client(array(
+            'base_uri' => 'https://api-ssl.bitly.com',
+        ));
     }
 
     /**
