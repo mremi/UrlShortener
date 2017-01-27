@@ -11,7 +11,7 @@
 
 namespace Mremi\UrlShortener\Provider\Bitly;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 /**
  * OAuth client class.
@@ -47,15 +47,17 @@ class OAuthClient implements AuthenticationInterface
      */
     public function getAccessToken()
     {
-        $client = new Client('https://api-ssl.bitly.com/oauth/access_token');
+        $client = new Client(array(
+            'base_uri' => 'https://api-ssl.bitly.com/oauth/access_token',
+        ));
 
-        $request = $client->post(null, null, null, array(
+        $response = $client->post(null, array(
             'auth' => array(
                 $this->username,
                 $this->password,
             ),
         ));
 
-        return $request->send()->getBody(true);
+        return $response->getBody()->getContents();
     }
 }
