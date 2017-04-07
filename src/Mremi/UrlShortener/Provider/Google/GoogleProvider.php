@@ -52,11 +52,13 @@ class GoogleProvider implements UrlShortenerProviderInterface
     {
         return 'google';
     }
-
+    
+    
     /**
-     * {@inheritdoc}
+     * @param LinkInterface $link
+     * @return string
      */
-    public function shorten(LinkInterface $link)
+    public function shorten(LinkInterface $link) : string 
     {
         $client = $this->createClient();
 
@@ -72,6 +74,8 @@ class GoogleProvider implements UrlShortenerProviderInterface
         $response = $this->validate($response->getBody()->getContents());
 
         $link->setShortUrl($response->id);
+        
+        return $link->getShortUrl();
     }
 
     /**
