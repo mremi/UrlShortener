@@ -72,6 +72,8 @@ class GoogleProvider implements UrlShortenerProviderInterface
         $response = $this->validate($response->getBody()->getContents());
 
         $link->setShortUrl($response->id);
+        
+        return $link->getShortUrl();
     }
 
     /**
