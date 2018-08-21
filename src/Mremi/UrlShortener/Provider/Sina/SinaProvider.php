@@ -3,7 +3,7 @@
 /*
  * This file is part of the Mremi\UrlShortener library.
  *
- * (c) zacksleo <zacksleo@gmail.com>
+ * (c) Rémi Marseille <marseille.remi@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -53,12 +53,12 @@ class SinaProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->get('shorten.json', [
-            'query' => [
-                'source' => $this->apiKey,
+        $response = $client->get('shorten.json', array(
+            'query' => array(
+                'source'   => $this->apiKey,
                 'url_long' => $link->getLongUrl(),
-            ]
-        ]);
+            ),
+        ));
 
         $response = $this->validate($response->getBody()->getContents());
 
@@ -72,12 +72,12 @@ class SinaProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->get('expand.json', [
-            'query' => [
-                'source' => $this->apiKey,
-                'url_short' => $link->getShortUrl()
-            ]
-        ]);
+        $response = $client->get('expand.json', array(
+            'query' => array(
+                'source'    => $this->apiKey,
+                'url_short' => $link->getShortUrl(),
+            ),
+        ));
 
         $response = $this->validate($response->getBody()->getContents());
 
@@ -123,6 +123,7 @@ class SinaProvider implements UrlShortenerProviderInterface
                 property_exists($response, 'error') ? $response->error : ''
             ));
         }
+
         return $response;
     }
 }

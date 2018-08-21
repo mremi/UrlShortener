@@ -3,7 +3,7 @@
 /*
  * This file is part of the Mremi\UrlShortener library.
  *
- * (c) zacksleo <zacksleo@gmail.com>
+ * (c) Rémi Marseille <marseille.remi@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,8 +12,8 @@
 namespace Mremi\UrlShortener\Command;
 
 use Mremi\UrlShortener\Model\Link;
-use Mremi\UrlShortener\Provider\Wechat\WechatProvider;
 use Mremi\UrlShortener\Provider\Wechat\OAuthClient;
+use Mremi\UrlShortener\Provider\Wechat\WechatProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

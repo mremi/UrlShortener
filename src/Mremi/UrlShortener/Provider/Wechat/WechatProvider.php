@@ -3,7 +3,7 @@
 /*
  * This file is part of the Mremi\UrlShortener library.
  *
- * (c) zacksleo <zacksleo@gmail.com>
+ * (c) Rémi Marseille <marseille.remi@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,8 +14,8 @@ namespace Mremi\UrlShortener\Provider\Wechat;
 use GuzzleHttp\Client;
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
-use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 use Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface;
+use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 
 /**
  * Wechat provider class.
@@ -57,7 +57,7 @@ class WechatProvider implements UrlShortenerProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @param LinkInterface $link   A link instance
+     * @param LinkInterface $link A link instance
      *
      * @throws InvalidApiResponseException
      */
@@ -67,12 +67,12 @@ class WechatProvider implements UrlShortenerProviderInterface
 
         $response = $client->post(sprintf('/cgi-bin/shorturl?access_token=%s',
             $this->auth->getAccessToken()
-        ),[
-            'json' => [
-                'action' => 'long2short',
-                'long_url' => $link->getLongUrl()
-            ]
-        ]);
+        ), array(
+            'json' => array(
+                'action'   => 'long2short',
+                'long_url' => $link->getLongUrl(),
+            ),
+        ));
 
         $response = $this->validate($response->getBody()->getContents());
 

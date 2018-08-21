@@ -3,7 +3,7 @@
 /*
  * This file is part of the Mremi\UrlShortener library.
  *
- * (c) zacksleo <zacksleo@gmail.com>
+ * (c) Rémi Marseille <marseille.remi@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,11 +38,11 @@ class BaiduProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->post('/create.php', [
-            'json' => [
+        $response = $client->post('/create.php', array(
+            'json' => array(
                 'url' => $link->getLongUrl(),
-            ]
-        ]);
+            ),
+        ));
 
         $response = $this->validate($response->getBody()->getContents(), true);
 
@@ -56,11 +56,11 @@ class BaiduProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->post('/query.php', [
-            'json' => [
-                'tinyUrl' => $link->getShortUrl()
-            ]
-        ]);
+        $response = $client->post('/query.php', array(
+            'json' => array(
+                'tinyUrl' => $link->getShortUrl(),
+            ),
+        ));
 
         $response = $this->validate($response->getBody()->getContents(), true);
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Mremi\UrlShortener library.
  *
- * (c) zacksleo <zacksleo@gmail.com>
+ * (c) Rémi Marseille <marseille.remi@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,7 +35,7 @@ class OAuthClient implements AuthenticationInterface
     /**
      * Constructor.
      *
-     * @param string $appid A valid Wechat appid
+     * @param string $appid     A valid Wechat appid
      * @param string $appsecret A valid Wechat appsecret
      */
     public function __construct($appid, $appsecret)
@@ -54,11 +54,11 @@ class OAuthClient implements AuthenticationInterface
         ));
 
         $apiRawResponse = $client->get('/cgi-bin/token', array(
-            'query' => [
+            'query' => array(
                 'grant_type' => 'client_credential',
-                'appid' => $this->appid,
-                'secret' => $this->appsecret,
-            ],
+                'appid'      => $this->appid,
+                'secret'     => $this->appsecret,
+            ),
         ));
         $response = json_decode($apiRawResponse->getBody()->getContents());
 
@@ -72,6 +72,7 @@ class OAuthClient implements AuthenticationInterface
                 property_exists($response, 'errmsg') ? $response->errmsg : ''
             ));
         }
+
         return $response->access_token;
     }
 }
