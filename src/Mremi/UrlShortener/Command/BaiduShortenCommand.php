@@ -16,6 +16,7 @@ use Mremi\UrlShortener\Provider\Baidu\BaiduProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -35,8 +36,8 @@ class BaiduShortenCommand extends Command
         $this
             ->setName('baidu:shorten')
             ->setDescription('Shortens the long given URL using the dwz.cn API')
-
-            ->addArgument('long-url', InputArgument::REQUIRED, 'The long URL to shorten');
+            ->addArgument('long-url', InputArgument::REQUIRED, 'The long URL to shorten')
+            ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
     }
 
     /**
@@ -46,8 +47,9 @@ class BaiduShortenCommand extends Command
     {
         $link = new Link();
         $link->setLongUrl($input->getArgument('long-url'));
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
 
-        $provider = new BaiduProvider();
+        $provider = new BaiduProvider($options);
 
         try {
             $provider->shorten($link);

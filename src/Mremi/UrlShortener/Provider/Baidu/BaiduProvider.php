@@ -24,6 +24,21 @@ use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
 class BaiduProvider implements UrlShortenerProviderInterface
 {
     /**
+     * @var array
+     */
+    private $options;
+
+    /**
+     * Constructor.
+     *
+     * @param array $options An array of options used to do the shorten/expand request
+     */
+    public function __construct(array $options = array())
+    {
+        $this->options = $options;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getName()
@@ -38,10 +53,13 @@ class BaiduProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->post('/create.php', array(
-            'json' => array(
-                'url' => $link->getLongUrl(),
+        $response = $client->post('/create.php', array_merge(
+            array(
+                'json' => array(
+                    'url' => $link->getLongUrl(),
+                ),
             ),
+            $this->options
         ));
 
         $response = $this->validate($response->getBody()->getContents(), true);
@@ -56,10 +74,13 @@ class BaiduProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->post('/query.php', array(
-            'json' => array(
-                'tinyUrl' => $link->getShortUrl(),
+        $response = $client->post('/query.php', array_merge(
+            array(
+                'json' => array(
+                    'tinyUrl' => $link->getShortUrl(),
+                ),
             ),
+            $this->options
         ));
 
         $response = $this->validate($response->getBody()->getContents(), true);

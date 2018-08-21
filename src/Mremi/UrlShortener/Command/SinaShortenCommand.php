@@ -16,6 +16,7 @@ use Mremi\UrlShortener\Provider\Sina\SinaProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -36,7 +37,8 @@ class SinaShortenCommand extends Command
             ->setName('sina:shorten')
             ->setDescription('Shortens the long given URL using the Sina API')
             ->addArgument('long-url', InputArgument::REQUIRED, 'The long URL to shorten')
-            ->addArgument('api-key', InputArgument::REQUIRED, 'A Sina API key, optional');
+            ->addArgument('api-key', InputArgument::REQUIRED, 'A Sina API key, optional')
+            ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
     }
 
     /**
@@ -46,8 +48,9 @@ class SinaShortenCommand extends Command
     {
         $link = new Link();
         $link->setLongUrl($input->getArgument('long-url'));
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
 
-        $provider = new SinaProvider($input->getArgument('api-key'));
+        $provider = new SinaProvider($input->getArgument('api-key'), $options);
 
         try {
             $provider->shorten($link);

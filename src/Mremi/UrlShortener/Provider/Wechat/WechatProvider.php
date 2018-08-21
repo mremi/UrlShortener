@@ -67,11 +67,14 @@ class WechatProvider implements UrlShortenerProviderInterface
 
         $response = $client->post(sprintf('/cgi-bin/shorturl?access_token=%s',
             $this->auth->getAccessToken()
-        ), array(
-            'json' => array(
-                'action'   => 'long2short',
-                'long_url' => $link->getLongUrl(),
+        ), array_merge(
+            array(
+                'json' => array(
+                    'action'   => 'long2short',
+                    'long_url' => $link->getLongUrl(),
+                ),
             ),
+            $this->options
         ));
 
         $response = $this->validate($response->getBody()->getContents());

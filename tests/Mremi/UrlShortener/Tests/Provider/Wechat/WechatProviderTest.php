@@ -26,7 +26,7 @@ class WechatProviderTest extends \PHPUnit_Framework_TestCase
     private $provider;
 
     /**
-     * Tests the shorten method throws exception if Bit.ly returns a string.
+     * Tests the shorten method throws exception if Wechat returns a string.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
      * @expectedExceptionMessage Wechat response is probably mal-formed because cannot be json-decoded.
@@ -65,7 +65,7 @@ class WechatProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests the shorten method with a valid Bit.ly's response.
+     * Tests the shorten method with a valid Wechat's response.
      */
     public function testShortenWithValidApiResponse()
     {

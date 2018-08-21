@@ -16,6 +16,7 @@ use Mremi\UrlShortener\Provider\Sina\SinaProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -36,7 +37,8 @@ class SinaExpandCommand extends Command
             ->setName('sina:expand')
             ->setDescription('Expands the short given URL using the Sina API')
             ->addArgument('short-url', InputArgument::REQUIRED, 'The short URL to expand')
-            ->addArgument('api-key', InputArgument::REQUIRED, 'A Sina API key, optional');
+            ->addArgument('api-key', InputArgument::REQUIRED, 'A Sina API key, optional')
+            ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
     }
 
     /**
@@ -46,8 +48,9 @@ class SinaExpandCommand extends Command
     {
         $link = new Link();
         $link->setShortUrl($input->getArgument('short-url'));
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
 
-        $provider = new SinaProvider($input->getArgument('api-key'));
+        $provider = new SinaProvider($input->getArgument('api-key'), $options);
 
         try {
             $provider->expand($link);
