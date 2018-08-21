@@ -239,6 +239,7 @@ You can also use the commands provided by this library, look at the help message
 
 ```bash
 $ bin/shortener baidu:shorten --help
+```
 
 ```bash
 $ bin/shortener baidu:shorten http://www.google.com
@@ -270,6 +271,7 @@ $googleProvider->expand($link);
 
 ```bash
 $ bin/shortener baidu:expand --help
+```
 
 ```bash
 $ bin/shortener baidu:expand http://dwz.cn/dDlVEAt5
