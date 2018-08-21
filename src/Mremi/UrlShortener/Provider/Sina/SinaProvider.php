@@ -100,7 +100,7 @@ class SinaProvider implements UrlShortenerProviderInterface
     }
 
     /**
-     * Validates the Google's response and returns it whether the status code is 200.
+     * Validates the Sina's response and returns it whether the status code is 200.
      *
      * @param string $apiRawResponse An API response, as it returned
      *
@@ -113,7 +113,7 @@ class SinaProvider implements UrlShortenerProviderInterface
         $response = json_decode($apiRawResponse);
 
         if (null === $response) {
-            throw new InvalidApiResponseException('Baidu response is probably mal-formed because cannot be json-decoded.');
+            throw new InvalidApiResponseException('Sina response is probably mal-formed because cannot be json-decoded.');
         }
 
         if (property_exists($response, 'error')) {
@@ -122,6 +122,12 @@ class SinaProvider implements UrlShortenerProviderInterface
                 property_exists($response, 'error_code') ? $response->error_code : '',
                 property_exists($response, 'error') ? $response->error : ''
             ));
+        }
+
+        if (property_exists($response, 'urls')) {
+            if (empty($response->urls[0]->url_long)) {
+                throw new InvalidApiResponseException('Property "longUrl" does not exist within Sina response.');
+            }
         }
 
         return $response;
