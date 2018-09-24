@@ -70,5 +70,53 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('google', $chainProvider->getProviders());
         $this->assertTrue($chainProvider->hasProvider('google'));
         $this->assertCount(2, $chainProvider->getProviders());
+
+        $baiduProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Baidu\BaiduProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $baiduProvider
+            ->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('baidu'));
+
+        $chainProvider->addProvider($baiduProvider);
+
+        $this->assertSame($baiduProvider, $chainProvider->getProvider('baidu'));
+        $this->assertArrayHasKey('baidu', $chainProvider->getProviders());
+        $this->assertTrue($chainProvider->hasProvider('baidu'));
+        $this->assertCount(3, $chainProvider->getProviders());
+
+        $sinaProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Sina\SinaProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $sinaProvider
+            ->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('sina'));
+
+        $chainProvider->addProvider($sinaProvider);
+
+        $this->assertSame($sinaProvider, $chainProvider->getProvider('sina'));
+        $this->assertArrayHasKey('sina', $chainProvider->getProviders());
+        $this->assertTrue($chainProvider->hasProvider('sina'));
+        $this->assertCount(4, $chainProvider->getProviders());
+
+        $wechatProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Wechat\WechatProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $wechatProvider
+            ->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('wechat'));
+
+        $chainProvider->addProvider($wechatProvider);
+
+        $this->assertSame($wechatProvider, $chainProvider->getProvider('wechat'));
+        $this->assertArrayHasKey('wechat', $chainProvider->getProviders());
+        $this->assertTrue($chainProvider->hasProvider('google'));
+        $this->assertCount(5, $chainProvider->getProviders());
     }
 }
