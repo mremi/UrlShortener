@@ -14,8 +14,11 @@ This library allows you to shorten a URL, reverse is also possible.
 **Basic Docs**
 
 * [Installation](#installation)
+* [Baidu API](#baidu-api)
 * [Bit.ly API](#bitly-api)
 * [Google API](#google-api)
+* [Sina API](#sina-api)
+* [Wechat API](#wechat-api)
 * [Chain providers](#chain-providers)
 * [Retrieve link](#retrieve-link)
 * [Contribution](#contribution)
@@ -45,6 +48,76 @@ $ php composer.phar update mremi/url-shortener
 ```
 
 Composer will install the library to your project's `vendor/mremi` directory.
+
+<a name="baidu-api"></a>
+
+## Baidu API
+
+### Shorten
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Baidu\BaiduProvider;
+
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
+
+$baiduProvider = new BaiduProvider(
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$baiduProvider->shorten($link);
+```
+
+You can also use the commands provided by this library, look at the help message:
+
+```bash
+$ bin/shortener baidu:shorten --help
+```
+
+```bash
+$ bin/shortener baidu:shorten http://www.google.com
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener baidu:shorten http://www.google.com --options='{"connect_timeout":1,"timeout":1}'
+```
+
+### Expand
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Baidu\BaiduProvider;
+
+$link = new Link;
+$link->setShortUrl('http://dwz.cn/dDlVEAt5');
+
+$googleProvider = new BaiduProvider(
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$googleProvider->expand($link);
+```
+
+```bash
+$ bin/shortener baidu:expand --help
+```
+
+```bash
+$ bin/shortener baidu:expand http://dwz.cn/dDlVEAt5
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener baidu:expand http://dwz.cn/dDlVEAt5 --options='{"connect_timeout":1,"timeout":1}'
+```
 
 <a name="bitly-api"></a>
 
@@ -209,6 +282,124 @@ Some options are available:
 ```bash
 $ bin/shortener google:expand http://goo.gl/fbsS --options='{"connect_timeout":1,"timeout":1}'
 ```
+
+<a name="sina-api"></a>
+
+## Sina API
+
+### Shorten
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Sina\SinaProvider;
+
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
+
+$sinaProvider = new SinaProvider(
+    'api_key',
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$sinaProvider->shorten($link);
+```
+
+You can also use the commands provided by this library, look at the help message:
+
+```bash
+$ bin/shortener sina:shorten --help
+```
+
+```bash
+$ bin/shortener sina:shorten http://www.google.com api_key
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener sina:shorten http://www.google.com api_key --options='{"connect_timeout":1,"timeout":1}'
+```
+
+### Expand
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Sina\SinaProvider;
+
+$link = new Link;
+$link->setShortUrl('http://t.cn/h51yw');
+
+$sinaProvider = new SinaProvider(
+    'api_key',
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$googleProvider->expand($link);
+```
+
+```bash
+$ bin/shortener sina:expand --help
+```
+
+```bash
+$ bin/shortener sina:expand http://t.cn/h51yw api_key
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener sina:expand http://t.cn/h51yw api_key --options='{"connect_timeout":1,"timeout":1}'
+```
+
+<a name="wechat-api"></a>
+
+## Wechat API
+
+### Shorten
+
+```php
+<?php
+
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\Wechat\WechatProvider;
+use Mremi\UrlShortener\Provider\Wechat\OAuthClient;
+
+$link = new Link;
+$link->setLongUrl('http://www.google.com');
+
+$wechatProvider = new WechatProvider(
+    new OAuthClient('username', 'password'),
+    array('connect_timeout' => 1, 'timeout' => 1)
+);
+
+$wechatProvider->shorten($link);
+```
+
+You can also use the commands provided by this library, look at the help message:
+
+```bash
+$ bin/shortener wechat:shorten --help
+```
+
+Some arguments are mandatory:
+
+```bash
+$ bin/shortener wechat:shorten appid secret http://www.google.com
+```
+
+Some options are available:
+
+```bash
+$ bin/shortener wechat:shorten appid secret http://www.google.com --options='{"connect_timeout":1,"timeout":1}'
+```
+
+### Expand
+
+Wechat does not support expand url yet.
 
 <a name="chain-providers"></a>
 
