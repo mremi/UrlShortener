@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.2.1 (2018-10-09)
+* Update [symfony/console](https://github.com/symfony/console) version to ^4.1 (See [#14](https://github.com/mremi/UrlShortener/issues/14))
+
 ## 2.2.0 (2018-09-24)
 
 * Added providers for baidu, sina and wechat
