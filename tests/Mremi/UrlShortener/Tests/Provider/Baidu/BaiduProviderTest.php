@@ -60,7 +60,7 @@ class BaiduProviderTest extends \PHPUnit_Framework_TestCase
      * Tests the shorten method throws exception if Baidu returns an error response.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned status code "-1: long url is not valid
+     * @expectedExceptionMessage Baidu returned code error message "-1: long url is not valid
      */
     public function testShortenThrowsExceptionIfApiResponseIsError()
     {
@@ -73,7 +73,7 @@ class BaiduProviderTest extends \PHPUnit_Framework_TestCase
      * Tests the shorten method throws exception if Baidu returns a response with no short url.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned status code "-1: unsafe url
+     * @expectedExceptionMessage Baidu returned code error message "-1: unsafe url
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoShortUrl()
     {
@@ -91,10 +91,10 @@ class BaiduProviderTest extends \PHPUnit_Framework_TestCase
 
         $apiRawResponse = <<<'JSON'
 {
- "status": 0,
- "tinyurl": "http://dwz.cn/OErDnjcx",
- "longUrl": "http://www.google.com/",
- "err_msg": ""
+ "Code": 0,
+ "ShortUrl": "https://dwz.cn/OErDnjcx",
+ "LongUrl": "http://www.google.com/",
+ "ErrMsg": ""
 }
 JSON;
 
@@ -113,7 +113,7 @@ JSON;
         $link
             ->expects($this->once())
             ->method('setShortUrl')
-            ->with($this->equalTo('http://dwz.cn/OErDnjcx'));
+            ->with($this->equalTo('https://dwz.cn/OErDnjcx'));
 
         $this->mockClient($response, 'post');
 
@@ -137,7 +137,7 @@ JSON;
      * Tests the expand method throws exception if Baidu returns an error response.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned status code "-1: long url is not valid
+     * @expectedExceptionMessage Baidu returned code error message "-1: long url is not valid
      */
     public function testExpandThrowsExceptionIfApiResponseIsError()
     {
@@ -150,7 +150,7 @@ JSON;
      * Tests the expand method throws exception if Baidu returns a response with no longUrl.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned status code "-2: short url dose not exist
+     * @expectedExceptionMessage Baidu returned code error message "-2: short url dose not exist
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoLongUrl()
     {
@@ -163,7 +163,7 @@ JSON;
      * Tests the expand method throws exception if Baidu returns a response with no status.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "status" does not exist within Baidu response.
+     * @expectedExceptionMessage Property "Code" does not exist within Baidu response.
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoStatus()
     {
@@ -171,9 +171,9 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-"tinyurl": "http://dwz.cn/OErDnjcx",
-"longurl": "http://www.google.com/",
-"err_msg": ""
+"ShortUrl": "https://dwz.cn/OErDnjcx",
+"LongUrl": "http://www.google.com/",
+"ErrMsg": ""
 }
 JSON;
 
@@ -202,10 +202,10 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-"status": 0,
-"tinyurl": "http://dwz.cn/OErDnjcx",
-"longurl": "http://www.google.com/",
-"err_msg": ""
+"Code": 0,
+"ShortUrl": "https://dwz.cn/OErDnjcx",
+"LongUrl": "http://www.google.com/",
+"ErrMsg": ""
 }
 JSON;
 
@@ -285,10 +285,10 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-"status": -1,
-"tinyurl": "http://www.google.com/",
-"longurl": ":",
-"err_msg": "long url is not valid"
+"Code": -1,
+"ShortUrl": "http://www.google.com/",
+"LongUrl": ":",
+"ErrMsg": "long url is not valid"
 }
 JSON;
 
@@ -317,9 +317,9 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
- "status": -1,
- "longUrl": "http://www.google.com/",
- "err_msg": "unsafe url"
+ "Code": -1,
+ "LongUrl": "http://www.google.com/",
+ "ErrMsg": "unsafe url"
 }
 JSON;
 
@@ -338,7 +338,7 @@ JSON;
     }
 
     /**
-     * Returns a response object with no "longUrl" node.
+     * Returns a response object with no "LongUrl" node.
      *
      * @return object
      */
@@ -348,10 +348,10 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-"status": -2,
-"tinyurl": "http://dwz.cn/OErDnjcxd",
-"longurl": "",
-"err_msg": "short url dose not exist"
+"Code": -2,
+"ShortUrl": "https://dwz.cn/OErDnjcxd",
+"LongUrl": "",
+"ErrMsg": "short url dose not exist"
 }
 JSON;
 
@@ -413,7 +413,7 @@ JSON;
         $link
             ->expects($this->once())
             ->method('getShortUrl')
-            ->will($this->returnValue('http://dwz.cn/OErDnjcx'));
+            ->will($this->returnValue('https://dwz.cn/OErDnjcx'));
 
         return $link;
     }

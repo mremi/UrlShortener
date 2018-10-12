@@ -130,7 +130,7 @@ class BaiduProvider implements UrlShortenerProviderInterface
         }
 
         if (0 !== $response->Code) {
-            throw new InvalidApiResponseException(sprintf('Baidu returned Code error message "%s: %s".', $response->Code, $response->ErrMsg));
+            throw new InvalidApiResponseException(sprintf('Baidu returned code error message "%s: %s".', $response->Code, $response->ErrMsg));
         }
 
         return $response;
