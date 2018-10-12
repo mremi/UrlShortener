@@ -53,7 +53,7 @@ class BaiduProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->post('/create.php', array_merge(
+        $response = $client->post('/admin/create', array_merge(
             array(
                 'json' => array(
                     'url' => $link->getLongUrl(),
@@ -64,7 +64,7 @@ class BaiduProvider implements UrlShortenerProviderInterface
 
         $response = $this->validate($response->getBody()->getContents(), true);
 
-        $link->setShortUrl($response->tinyurl);
+        $link->setShortUrl($response->ShortUrl);
     }
 
     /**
@@ -74,10 +74,10 @@ class BaiduProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->post('/query.php', array_merge(
+        $response = $client->post('/admin/query', array_merge(
             array(
                 'json' => array(
-                    'tinyUrl' => $link->getShortUrl(),
+                    'shortUrl' => $link->getShortUrl(),
                 ),
             ),
             $this->options
@@ -85,7 +85,7 @@ class BaiduProvider implements UrlShortenerProviderInterface
 
         $response = $this->validate($response->getBody()->getContents(), true);
 
-        $link->setLongUrl($response->longurl);
+        $link->setLongUrl($response->LongUrl);
     }
 
     /**
@@ -125,12 +125,12 @@ class BaiduProvider implements UrlShortenerProviderInterface
             return $response;
         }
 
-        if (!property_exists($response, 'status')) {
-            throw new InvalidApiResponseException('Property "status" does not exist within Baidu response.');
+        if (!property_exists($response, 'Code')) {
+            throw new InvalidApiResponseException('Property "Code" does not exist within Baidu response.');
         }
 
-        if (0 !== $response->status) {
-            throw new InvalidApiResponseException(sprintf('Baidu returned status code "%s: %s".', $response->status, $response->err_msg));
+        if (0 !== $response->Code) {
+            throw new InvalidApiResponseException(sprintf('Baidu returned Code error message "%s: %s".', $response->Code, $response->ErrMsg));
         }
 
         return $response;
