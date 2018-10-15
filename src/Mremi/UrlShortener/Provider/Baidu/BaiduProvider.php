@@ -99,7 +99,7 @@ class BaiduProvider implements UrlShortenerProviderInterface
     protected function createClient()
     {
         return new Client(array(
-            'base_uri' => 'http://dwz.cn',
+            'base_uri' => 'https://dwz.cn',
         ));
     }
 
