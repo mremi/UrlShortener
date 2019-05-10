@@ -18,7 +18,7 @@ use Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider;
  */
 class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
 {
-    public function testShorten() 
+    public function testShorten()
     {
         $provider = $this->getMock('\Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider', array('createClient'), array(
             'ABCD1234',
@@ -39,7 +39,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
                 '/links',
                 array(
                     'json' => array(
-                        'domain'      =>'abc.de',
+                        'domain'      => 'abc.de',
                         'originalURL' => 'http://perdu.com?k=12345678901234567890',
                     ),
                 )
@@ -58,7 +58,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('https://abc.de/pgsYuBjuGtzn', $link->getShortUrl());
     }
 
-    public function testValidate() 
+    public function testValidate()
     {
         $response = new \GuzzleHttp\Psr7\Response(
             200,
@@ -76,7 +76,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->invoke($provider, $response);
     }
 
-    public function testValidateIncomplete() 
+    public function testValidateIncomplete()
     {
         $response = new \GuzzleHttp\Psr7\Response(
             200,
@@ -96,7 +96,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->invoke($provider, $response);
     }
 
-    public function testValidateError() 
+    public function testValidateError()
     {
         $response = new \GuzzleHttp\Psr7\Response(
             409
