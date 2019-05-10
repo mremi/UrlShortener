@@ -34,8 +34,8 @@ class ShortCmProvider implements UrlShortenerProviderInterface
     /**
      * Constructor.
      *
-     * @param string $apiKey  An API key
-     * @param string $domain   Domain name you added to short.cm
+     * @param string $apiKey An API key
+     * @param string $domain Domain name you added to short.cm
      */
     public function __construct($apiKey, $domain)
     {
@@ -59,7 +59,7 @@ class ShortCmProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $data = array(
-            'domain' => $this->domain,
+            'domain'      => $this->domain,
             'originalURL' => $link->getLongUrl(),
         );
 
@@ -101,14 +101,14 @@ class ShortCmProvider implements UrlShortenerProviderInterface
     {
         return new Client(array(
             'base_uri' => 'https://api.short.cm',
-            'headers' => array(
+            'headers'  => array(
                 'Authorization' => $this->apiKey,
             ),
         ));
     }
 
     /**
-     * Validates the API response
+     * Validates the API response.
      *
      * @param \GuzzleHttp\Psr7\Response $response API response
      *
@@ -117,7 +117,7 @@ class ShortCmProvider implements UrlShortenerProviderInterface
     private function validate($response)
     {
         if ($response->getStatusCode() !== 200) {
-            throw new InvalidApiResponseException('Short.cm API returned unexpected status code ' . $response->getStatusCode());
+            throw new InvalidApiResponseException('Short.cm API returned unexpected status code '.$response->getStatusCode());
         }
 
         $body = $response->getBody()->__toString();
