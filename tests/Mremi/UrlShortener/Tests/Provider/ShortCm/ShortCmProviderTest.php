@@ -11,7 +11,11 @@
 
 namespace Mremi\UrlShortener\Tests\Provider\ShortCm;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider;
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 
 /**
  * Tests ShortCmProvider class.
@@ -20,13 +24,13 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testShorten()
     {
-        $provider = $this->getMock('\Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider', array('createClient'), array(
+        $provider = $this->getMock(ShortCmProvider::class, array('createClient'), array(
             'ABCD1234',
             'abc.de',
         ));
-        $client = $this->getMock('\GuzzleHttp\Client', array('post'));
+        $client = $this->getMock(Client::class, array('post'));
 
-        $response = new \GuzzleHttp\Psr7\Response(
+        $response = new Response(
             200,
             array(),
             '{"id":12345678,"originalURL":"http://perdu.com?k=12345678901234567890","DomainId":98765,"archived":false,"path":"pgsYuBjuGtzn","redirectType":null,"OwnerId":12345,"updatedAt":"2019-05-10T05:18:24.928Z","createdAt":"2019-05-10T05:18:24.928Z","secureShortURL":"https://abc.de/pgsYuBjuGtzn","shortURL":"https://abc.de/pgsYuBjuGtzn","duplicate":false}'
@@ -51,7 +55,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
             ->method('createClient')
             ->will($this->returnValue($client));
 
-        $link = new \Mremi\UrlShortener\Model\Link();
+        $link = new Link();
         $link->setLongUrl('http://perdu.com?k=12345678901234567890');
         $provider->shorten($link);
 
@@ -60,7 +64,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testValidate()
     {
-        $response = new \GuzzleHttp\Psr7\Response(
+        $response = new Response(
             200,
             array(),
             '{"id":12345678,"originalURL":"http://perdu.com?k=12345678901234567890","DomainId":98765,"archived":false,"path":"pgsYuBjuGtzn","redirectType":null,"OwnerId":12345,"updatedAt":"2019-05-10T05:18:24.928Z","createdAt":"2019-05-10T05:18:24.928Z","secureShortURL":"https://abc.de/pgsYuBjuGtzn","shortURL":"https://abc.de/pgsYuBjuGtzn","duplicate":false}'
@@ -78,7 +82,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateIncomplete()
     {
-        $response = new \GuzzleHttp\Psr7\Response(
+        $response = new Response(
             200,
             array(),
             '{"id":12345678,"originalURL":"http://perdu.com?k=12345678901234567890","DomainId":98765,"archived":false,"path":"pgsYuBjuGtzn","redirectType":null,"OwnerId":12345,"updatedAt":"2019-05-10T05:18:24.928Z","createdAt":"2019-05-10T05:18:24.928Z","secureShortURL":"","shortURL":"","duplicate":false}'
@@ -89,7 +93,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
             'abc.de'
         );
 
-        $this->setExpectedException('\Mremi\UrlShortener\Exception\InvalidApiResponseException');
+        $this->setExpectedException(InvalidApiResponseException::class);
 
         $method = new \ReflectionMethod($provider, 'validate');
         $method->setAccessible(true);
@@ -98,7 +102,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateError()
     {
-        $response = new \GuzzleHttp\Psr7\Response(
+        $response = new Response(
             409
         );
 
@@ -107,7 +111,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
             'abc.de'
         );
 
-        $this->setExpectedException('\Mremi\UrlShortener\Exception\InvalidApiResponseException');
+        $this->setExpectedException(InvalidApiResponseException::class);
 
         $method = new \ReflectionMethod($provider, 'validate');
         $method->setAccessible(true);

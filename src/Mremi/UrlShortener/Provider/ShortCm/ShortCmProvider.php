@@ -12,6 +12,7 @@
 namespace Mremi\UrlShortener\Provider\ShortCm;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\UrlShortenerProviderInterface;
@@ -110,11 +111,11 @@ class ShortCmProvider implements UrlShortenerProviderInterface
     /**
      * Validates the API response.
      *
-     * @param \GuzzleHttp\Psr7\Response $response API response
+     * @param Response $response API response
      *
      * @throws InvalidApiResponseException
      */
-    private function validate($response)
+    private function validate(Response $response)
     {
         if ($response->getStatusCode() !== 200) {
             throw new InvalidApiResponseException('Short.cm API returned unexpected status code '.$response->getStatusCode());
