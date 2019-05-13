@@ -13,9 +13,9 @@ namespace Mremi\UrlShortener\Tests\Provider\ShortCm;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider;
-use Mremi\UrlShortener\Model\Link;
 use Mremi\UrlShortener\Exception\InvalidApiResponseException;
+use Mremi\UrlShortener\Model\Link;
+use Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider;
 
 /**
  * Tests ShortCmProvider class.
