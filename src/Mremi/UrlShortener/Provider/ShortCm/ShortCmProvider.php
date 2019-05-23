@@ -82,12 +82,33 @@ class ShortCmProvider implements UrlShortenerProviderInterface
     }
 
     /**
-     * @todo Implement method expand()
      * {@inheritdoc}
      */
     public function expand(LinkInterface $link)
     {
-        throw new \Exception('Not implemented');
+        $client = $this->createClient();
+
+        $parsed = parse_url($link->getShortUrl());
+        $path = preg_replace('@^/(.*)$@', '$1', $parsed['path']);
+
+        $data = array(
+            'domain' => $this->domain,
+            'path'   => $path,
+        );
+
+        $response = $client->get('/links/expand', array(
+            'query' => $data,
+        ));
+
+        $this->validateResponseExpand($response);
+
+        $body = json_decode($response->getBody()->__toString(), true);
+
+        $url = !empty($body['originalURL'])
+            ? $body['originalURL']
+            : null;
+
+        $link->setLongUrl($url);
     }
 
     /**
@@ -135,6 +156,36 @@ class ShortCmProvider implements UrlShortenerProviderInterface
 
         if (empty($body['secureShortURL']) && empty($body['shortURL'])) {
             throw new InvalidApiResponseException('Short.cm API could not generate a short URL');
+        }
+    }
+
+    /**
+     * Validates the API response for an Expand request
+     *
+     * @param Response $response API response
+     *
+     * @throws InvalidApiResponseException
+     */
+    private function validateResponseExpand(Response $response)
+    {
+        if ($response->getStatusCode() !== 200) {
+            throw new InvalidApiResponseException('Short.cm API returned unexpected status code '.$response->getStatusCode());
+        }
+
+        $body = $response->getBody()->__toString();
+
+        if (empty($body)) {
+            throw new InvalidApiResponseException('Short.cm API returned an empty body');
+        }
+
+        $body = json_decode($body, true);
+
+        if (empty($body)) {
+            throw new InvalidApiResponseException('Short.cm API response body isnt valid JSON');
+        }
+
+        if (empty($body['originalURL'])) {
+            throw new InvalidApiResponseException('Short.cm API could not expand this URL');
         }
     }
 }
