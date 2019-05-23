@@ -160,7 +160,7 @@ class ShortCmProvider implements UrlShortenerProviderInterface
     }
 
     /**
-     * Validates the API response for an Expand request
+     * Validates the API response for an Expand request.
      *
      * @param Response $response API response
      *
