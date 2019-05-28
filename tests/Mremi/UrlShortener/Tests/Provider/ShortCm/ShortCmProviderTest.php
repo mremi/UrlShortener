@@ -199,7 +199,7 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
         $method->invoke($provider, $response);
     }
-    
+
     /**
      * Tests the shorten response validation method with a incomplete API response.
      *
