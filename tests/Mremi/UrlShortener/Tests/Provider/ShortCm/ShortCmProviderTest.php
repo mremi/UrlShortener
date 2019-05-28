@@ -22,6 +22,9 @@ use Mremi\UrlShortener\Provider\ShortCm\ShortCmProvider;
  */
 class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Tests the expand method with a valid API response.
+     */
     public function testExpand()
     {
         $provider = $this->getMock(ShortCmProvider::class, array('createClient'), array(
@@ -62,6 +65,9 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('http://perdu.com?k=12345678901234567890', $link->getLongUrl());
     }
 
+    /**
+     * Tests the expand response validation method with a valid API response.
+     */
     public function testValidateResponseExpand()
     {
         $response = new Response(
@@ -80,6 +86,12 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->invoke($provider, $response);
     }
 
+    /**
+     * Tests the expand response validation method with an incomplete API response.
+     *
+     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
+     * @expectedExceptionMessage Short.cm API could not expand this URL
+     */
     public function testValidateResponseExpandIncomplete()
     {
         $response = new Response(
@@ -100,6 +112,12 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->invoke($provider, $response);
     }
 
+    /**
+     * Tests the expand response validation method with a API response for a non-existing URL.
+     *
+     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
+     * @expectedExceptionMessage Short.cm API returned unexpected status code 404
+     */
     public function testValidateResponseExpandError()
     {
         $response = new Response(
@@ -118,6 +136,9 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->invoke($provider, $response);
     }
 
+    /**
+     * Tests the shorten method with a valid API response.
+     */
     public function testShorten()
     {
         $provider = $this->getMock(ShortCmProvider::class, array('createClient'), array(
@@ -158,6 +179,9 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('https://abc.de/pgsYuBjuGtzn', $link->getShortUrl());
     }
 
+    /**
+     * Tests the shorten response validation method with a valid API response.
+     */
     public function testValidate()
     {
         $response = new Response(
@@ -175,7 +199,13 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
         $method->invoke($provider, $response);
     }
-
+    
+    /**
+     * Tests the shorten response validation method with a incomplete API response.
+     *
+     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
+     * @expectedExceptionMessage Short.cm API returned unexpected status code 409
+     */
     public function testValidateIncomplete()
     {
         $response = new Response(
@@ -196,6 +226,12 @@ class ShortCmProviderTest extends \PHPUnit_Framework_TestCase
         $method->invoke($provider, $response);
     }
 
+    /**
+     * Tests the shorten response validation method with a error API response.
+     *
+     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
+     * @expectedExceptionMessage Short.cm API returned unexpected status code 409
+     */
     public function testValidateError()
     {
         $response = new Response(
