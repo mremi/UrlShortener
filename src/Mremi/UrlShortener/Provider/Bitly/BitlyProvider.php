@@ -65,8 +65,9 @@ class BitlyProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->get(sprintf('/v3/shorten?access_token=%s&longUrl=%s&domain=%s',
-            $this->auth->getAccessToken(),
+        $this->options['headers']['Authorization'] = 'Bearer ' . $this->auth->getAccessToken();
+
+        $response = $client->get(sprintf('/v4/shorten?longUrl=%s&domain=%s',
             urlencode($link->getLongUrl()),
             $domain
         ), $this->options);
@@ -88,8 +89,9 @@ class BitlyProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->get(sprintf('/v3/expand?access_token=%s&shortUrl=%s&hash=%s',
-            $this->auth->getAccessToken(),
+        $this->options['headers']['Authorization'] = 'Bearer ' . $this->auth->getAccessToken();
+
+        $response = $client->get(sprintf('/v4/expand?shortUrl=%s&hash=%s',
             urlencode($link->getShortUrl()),
             $hash
         ), $this->options);
