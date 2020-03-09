@@ -41,7 +41,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
      */
     public function __construct(AuthenticationInterface $auth, array $options = array())
     {
-        $this->auth    = $auth;
+        $this->auth = $auth;
         $this->options = $options;
     }
 
@@ -67,14 +67,19 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
         $this->options['headers']['Authorization'] = 'Bearer ' . $this->auth->getAccessToken();
 
-        $response = $client->get(sprintf('/v4/shorten?longUrl=%s&domain=%s',
-            urlencode($link->getLongUrl()),
-            $domain
-        ), $this->options);
+        $response = $client->post('/v4/shorten', array_merge(
+            array(
+                'json' => array(
+                    'domain' => $domain,
+                    'long_url' => $link->getLongUrl(),
+                ),
+            ),
+            $this->options
+        ));
 
-        $response = $this->validate($response->getBody()->getContents());
+        $response = $this->validate($response->getBody()->getContents(), $response->getStatusCode());
 
-        $link->setShortUrl($response->data->url);
+        $link->setShortUrl($response->link);
     }
 
     /**
@@ -91,14 +96,18 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
         $this->options['headers']['Authorization'] = 'Bearer ' . $this->auth->getAccessToken();
 
-        $response = $client->get(sprintf('/v4/expand?shortUrl=%s&hash=%s',
-            urlencode($link->getShortUrl()),
-            $hash
-        ), $this->options);
+        $response = $client->post('/v4/expand', array_merge(
+            array(
+                'json' => array(
+                    'bitlink_id' => $hash ?: $link->getShortUrl(),
+                ),
+            ),
+            $this->options
+        ));
 
-        $response = $this->validate($response->getBody()->getContents());
+        $response = $this->validate($response->getBody()->getContents(), $response->getStatusCode());
 
-        $link->setLongUrl($response->data->expand[0]->long_url);
+        $link->setLongUrl($response->long_url);
     }
 
     /**
@@ -119,13 +128,14 @@ class BitlyProvider implements UrlShortenerProviderInterface
     /**
      * Validates the Bit.ly's response and returns it whether the status code is 200.
      *
-     * @param string $apiRawResponse
+     * @param string  $apiRawResponse
+     * @param integer $statusCode
      *
      * @return object
      *
      * @throws InvalidApiResponseException
      */
-    private function validate($apiRawResponse)
+    private function validate($apiRawResponse, $statusCode)
     {
         $response = json_decode($apiRawResponse);
 
@@ -133,14 +143,10 @@ class BitlyProvider implements UrlShortenerProviderInterface
             throw new InvalidApiResponseException('Bit.ly response is probably mal-formed because cannot be json-decoded.');
         }
 
-        if (!property_exists($response, 'status_code')) {
-            throw new InvalidApiResponseException('Property "status_code" does not exist within Bit.ly response.');
-        }
-
-        if (200 !== $response->status_code) {
+        if ($statusCode < 200 || $statusCode >= 300) {
             throw new InvalidApiResponseException(sprintf('Bit.ly returned status code "%s" with message "%s"',
-                $response->status_code,
-                property_exists($response, 'status_txt') ? $response->status_txt : ''
+                $statusCode,
+                property_exists($response, 'message') ? $response->message : ''
             ));
         }
 
