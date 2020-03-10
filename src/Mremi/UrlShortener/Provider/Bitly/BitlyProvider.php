@@ -68,12 +68,12 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
         $this->options['headers']['Authorization'] = 'Bearer '.$this->auth->getAccessToken();
 
-        $response = $client->post('/v4/shorten', array_merge(array(
-            'json' => array(
+        $response = $client->post('/v4/shorten', array_merge([
+            'json' => [
                 'domain'   => $domain,
                 'long_url' => $link->getLongUrl(),
-            ),
-        ), $this->options));
+            ],
+        ], $this->options));
 
         $response = $this->validate($response);
 
@@ -94,11 +94,11 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
         $this->options['headers']['Authorization'] = 'Bearer '.$this->auth->getAccessToken();
 
-        $response = $client->post('/v4/expand', array_merge(array(
-            'json' => array(
+        $response = $client->post('/v4/expand', array_merge([
+            'json' => [
                 'bitlink_id' => $hash ?: $link->getShortUrl(),
-            ),
-        ), $this->options));
+            ],
+        ], $this->options));
 
         $response = $this->validate($response);
 
@@ -122,8 +122,6 @@ class BitlyProvider implements UrlShortenerProviderInterface
 
     /**
      * Validates the Bit.ly's response and returns it whether the status code is 200.
-     *
-     * @param ResponseInterface $response
      *
      * @return object
      *

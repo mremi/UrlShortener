@@ -45,23 +45,10 @@ class BitlyProviderTest extends TestCase
     }
 
     /**
-     * Tests the shorten method throws exception if Bit.ly returns a response with no status_code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "status_code" does not exist within Bit.ly response.
-     */
-    public function testShortenThrowsExceptionIfApiResponseHasNoStatusCode()
-    {
-        $this->mockClient($this->getMockResponseAsInvalidObject());
-
-        $this->provider->shorten($this->getBaseMockLink());
-    }
-
-    /**
      * Tests the shorten method throws exception if Bit.ly returns an invalid status code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Bit.ly returned status code "500" with message "KO"
+     * @expectedExceptionMessage Bit.ly returned status code "404" with message "NOT_FOUND"
      */
     public function testShortenThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
@@ -79,15 +66,15 @@ class BitlyProviderTest extends TestCase
 
         $apiRawResponse = <<<'JSON'
 {
-  "data": {
-    "global_hash": "900913",
-    "hash": "ze6poY",
-    "long_url": "http://www.google.com/",
-    "new_hash": 0,
-    "url": "http://bit.ly/ze6poY"
-  },
-  "status_code": 200,
-  "status_txt": "OK"
+  "id": "bit.ly/ze6poY",
+  "link": "http://bit.ly/ze6poY",
+  "long_url": "http://www.google.com/",
+  "created_at": "2012-03-12T16:18:23+0000",
+  "created_by": "xyzzy",
+  "client_id": "3f5101961529477287d0714a17a68023",
+  "references": {
+    "group": "https://api-ssl.bitly.com/v4/groups/74a81764c9d9"
+  }
 }
 JSON;
 
@@ -101,6 +88,11 @@ JSON;
             ->expects($this->once())
             ->method('getBody')
             ->will($this->returnValue($stream));
+
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(201));
 
         $link = $this->getMockLongLink();
         $link
@@ -127,23 +119,10 @@ JSON;
     }
 
     /**
-     * Tests the expand method throws exception if Bit.ly returns a response with no status_code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "status_code" does not exist within Bit.ly response.
-     */
-    public function testExpandThrowsExceptionIfApiResponseHasNoStatusCode()
-    {
-        $this->mockClient($this->getMockResponseAsInvalidObject());
-
-        $this->provider->expand($this->getBaseMockLink());
-    }
-
-    /**
      * Tests the expand method throws exception if Bit.ly returns an invalid status code.
      *
      * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Bit.ly returned status code "500" with message "KO"
+     * @expectedExceptionMessage Bit.ly returned status code "404" with message "NOT_FOUND"
      */
     public function testExpandThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
@@ -161,18 +140,10 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-  "data": {
-    "expand": [
-      {
-        "global_hash": "900913",
-        "long_url": "http://www.google.com/",
-        "short_url": "http://bit.ly/ze6poY",
-        "user_hash": "ze6poY"
-      }
-    ]
-  },
-  "status_code": 200,
-  "status_txt": "OK"
+  "id":"bit.ly/ze6poY",
+  "link":"http://bit.ly/ze6poY",
+  "long_url": "http://www.google.com/",
+  "created_at":"2012-03-12T16:18:23+0000"
 }
 JSON;
 
@@ -186,6 +157,11 @@ JSON;
             ->expects($this->once())
             ->method('getBody')
             ->will($this->returnValue($stream));
+
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(200));
 
         $link = $this->getMockShortLink();
         $link
@@ -273,13 +249,10 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-  "data": {
-    "global_hash": "900913",
-    "hash": "ze6poY",
-    "long_url": "http://www.google.com/",
-    "new_hash": 0,
-    "url": "http://bit.ly/ze6poY"
-  }
+  "id":"bit.ly/ze6poY",
+  "link":"http://bit.ly/ze6poY",
+  "longUrl": "http://www.google.com/",
+  "createdAt":"2012-03-12T16:18:23+0000"
 }
 JSON;
 
@@ -293,6 +266,11 @@ JSON;
             ->expects($this->once())
             ->method('getBody')
             ->will($this->returnValue($stream));
+
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(200));
 
         return $response;
     }
@@ -308,15 +286,9 @@ JSON;
 
         $apiRawResponse = <<<'JSON'
 {
-  "data": {
-    "global_hash": "900913",
-    "hash": "ze6poY",
-    "long_url": "http://www.google.com/",
-    "new_hash": 0,
-    "url": "http://bit.ly/ze6poY"
-  },
-  "status_code": 500,
-  "status_txt": "KO"
+  "message": "NOT_FOUND",
+  "resource": "bitlinks",
+  "description": "What you are looking for cannot be found."
 }
 JSON;
 
@@ -330,6 +302,11 @@ JSON;
             ->expects($this->once())
             ->method('getBody')
             ->will($this->returnValue($stream));
+
+        $response
+            ->expects($this->once())
+            ->method('getStatusCode')
+            ->will($this->returnValue(404));
 
         return $response;
     }
@@ -346,7 +323,7 @@ JSON;
             ->getMock();
         $client
             ->expects($this->once())
-            ->method('get')
+            ->method('post')
             ->will($this->returnValue($response));
 
         $this->provider
