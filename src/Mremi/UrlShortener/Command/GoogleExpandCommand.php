@@ -38,7 +38,7 @@ class GoogleExpandCommand extends Command
             ->setDescription('Expands the short given URL using the Google API')
 
             ->addArgument('short-url', InputArgument::REQUIRED, 'The short URL to expand')
-            ->addArgument('api-key',   InputArgument::OPTIONAL, 'A Google API key, optional')
+            ->addArgument('api-key', InputArgument::OPTIONAL, 'A Google API key, optional')
 
             ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
     }
@@ -51,7 +51,7 @@ class GoogleExpandCommand extends Command
         $link = new Link();
         $link->setShortUrl($input->getArgument('short-url'));
 
-        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : [];
 
         $provider = new GoogleProvider($input->getArgument('api-key'), $options);
 

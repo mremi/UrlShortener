@@ -47,7 +47,7 @@ class BaiduExpandCommand extends Command
     {
         $link = new Link();
         $link->setShortUrl($input->getArgument('short-url'));
-        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : [];
 
         $provider = new BaiduProvider($options);
 

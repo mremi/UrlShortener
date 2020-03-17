@@ -11,14 +11,19 @@
 
 namespace Mremi\UrlShortener\Tests\Provider\Baidu;
 
+use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Baidu\BaiduProvider;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Tests BaiduProvider class.
  *
  * @author zacksleo <zacksleo@gmail.com>
  */
-class BaiduProviderTest extends \PHPUnit_Framework_TestCase
+class BaiduProviderTest extends TestCase
 {
     /**
      * @var object
@@ -30,8 +35,8 @@ class BaiduProviderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->provider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Baidu\BaiduProvider')
-            ->setMethods(array('createClient'))
+        $this->provider = $this->getMockBuilder(BaiduProvider::class)
+            ->setMethods(['createClient'])
             ->getMock();
     }
 
@@ -238,7 +243,7 @@ JSON;
      */
     private function getBaseMockResponse()
     {
-        return $this->getMock('Psr\Http\Message\ResponseInterface');
+        return $this->createMock(ResponseInterface::class);
     }
 
     /**
@@ -248,7 +253,7 @@ JSON;
      */
     private function getBaseMockStream()
     {
-        return $this->getMock('Psr\Http\Message\StreamInterface');
+        return $this->createMock(StreamInterface::class);
     }
 
     /**
@@ -377,8 +382,8 @@ JSON;
      */
     private function mockClient($response, $requestMethod)
     {
-        $client = $this->getMockBuilder('GuzzleHttp\ClientInterface')
-            ->setMethods(array('send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'))
+        $client = $this->getMockBuilder(ClientInterface::class)
+            ->setMethods(['send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'])
             ->getMock();
         $client
             ->expects($this->once())
@@ -398,7 +403,7 @@ JSON;
      */
     private function getBaseMockLink()
     {
-        return $this->getMock('Mremi\UrlShortener\Model\LinkInterface');
+        return $this->createMock(LinkInterface::class);
     }
 
     /**

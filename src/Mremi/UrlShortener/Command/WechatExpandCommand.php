@@ -38,8 +38,8 @@ class WechatExpandCommand extends Command
             ->setName('wechat:expand')
             ->setDescription('Expands the short given URL using the Wechat API')
 
-            ->addArgument('appid',  InputArgument::REQUIRED, 'A valid Wechat appid')
-            ->addArgument('appsecret',  InputArgument::REQUIRED, 'A valid Wechat appid')
+            ->addArgument('appid', InputArgument::REQUIRED, 'A valid Wechat appid')
+            ->addArgument('appsecret', InputArgument::REQUIRED, 'A valid Wechat appid')
             ->addArgument('short-url', InputArgument::REQUIRED, 'The short URL to expand')
             ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
     }
@@ -51,7 +51,7 @@ class WechatExpandCommand extends Command
     {
         $link = new Link();
         $link->setShortUrl($input->getArgument('short-url'));
-        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : [];
 
         $provider = new WechatProvider(
             new OAuthClient($input->getArgument('appid'), $input->getArgument('appsecret'), $options)

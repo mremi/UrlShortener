@@ -11,14 +11,20 @@
 
 namespace Mremi\UrlShortener\Tests\Provider\Bitly;
 
+use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Model\LinkInterface;
+use Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Tests BitlyProvider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
-class BitlyProviderTest extends \PHPUnit_Framework_TestCase
+class BitlyProviderTest extends TestCase
 {
     /**
      * @var object
@@ -197,11 +203,11 @@ JSON;
      */
     protected function setUp()
     {
-        $auth = $this->getMock('Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface');
+        $auth = $this->createMock(AuthenticationInterface::class);
 
-        $this->provider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Bitly\BitlyProvider')
-            ->setConstructorArgs(array($auth))
-            ->setMethods(array('createClient'))
+        $this->provider = $this->getMockBuilder(BitlyProvider::class)
+            ->setConstructorArgs([$auth])
+            ->setMethods(['createClient'])
             ->getMock();
     }
 
@@ -220,7 +226,7 @@ JSON;
      */
     private function getBaseMockResponse()
     {
-        return $this->getMock('Psr\Http\Message\ResponseInterface');
+        return $this->createMock(ResponseInterface::class);
     }
 
     /**
@@ -230,7 +236,7 @@ JSON;
      */
     private function getBaseMockStream()
     {
-        return $this->getMock('Psr\Http\Message\StreamInterface');
+        return $this->createMock(StreamInterface::class);
     }
 
     /**
@@ -335,8 +341,8 @@ JSON;
      */
     private function mockClient($response)
     {
-        $client = $this->getMockBuilder('GuzzleHttp\ClientInterface')
-            ->setMethods(array('send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'))
+        $client = $this->getMockBuilder(ClientInterface::class)
+            ->setMethods(['send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'])
             ->getMock();
         $client
             ->expects($this->once())
@@ -356,7 +362,7 @@ JSON;
      */
     private function getBaseMockLink()
     {
-        return $this->getMock('Mremi\UrlShortener\Model\LinkInterface');
+        return $this->createMock(LinkInterface::class);
     }
 
     /**

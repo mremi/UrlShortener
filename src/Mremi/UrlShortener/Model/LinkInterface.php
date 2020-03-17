@@ -20,8 +20,6 @@ interface LinkInterface
 {
     /**
      * Sets the created at.
-     *
-     * @param \DateTime $createdAt
      */
     public function setCreatedAt(\DateTime $createdAt);
 

@@ -39,11 +39,12 @@ class SinaProvider implements UrlShortenerProviderInterface
      * @param string $apiKey  A Sina API key, optional
      * @param array  $options An array of options used to do the shorten/expand request
      */
-    public function __construct($apiKey = null, array $options = array())
+    public function __construct($apiKey = null, array $options = [])
     {
-        $this->apiKey = $apiKey;
+        $this->apiKey  = $apiKey;
         $this->options = $options;
     }
+
     /**
      * {@inheritdoc}
      */
@@ -60,12 +61,12 @@ class SinaProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $response = $client->get('shorten.json', array_merge(
-            array(
-                'query' => array(
+            [
+                'query' => [
                     'source'   => $this->apiKey,
                     'url_long' => $link->getLongUrl(),
-                ),
-            ),
+                ],
+            ],
             $this->options
         ));
 
@@ -82,12 +83,12 @@ class SinaProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $response = $client->get('expand.json', array_merge(
-            array(
-                'query' => array(
+            [
+                'query' => [
                     'source'    => $this->apiKey,
                     'url_short' => $link->getShortUrl(),
-                ),
-            ),
+                ],
+            ],
             $this->options
         ));
 
@@ -106,9 +107,9 @@ class SinaProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client(array(
+        return new Client([
             'base_uri' => 'https://api.weibo.com/2/short_url/',
-        ));
+        ]);
     }
 
     /**

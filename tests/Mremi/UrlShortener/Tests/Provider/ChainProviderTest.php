@@ -11,14 +11,20 @@
 
 namespace Mremi\UrlShortener\Tests\Provider;
 
+use Mremi\UrlShortener\Provider\Baidu\BaiduProvider;
+use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
 use Mremi\UrlShortener\Provider\ChainProvider;
+use Mremi\UrlShortener\Provider\Google\GoogleProvider;
+use Mremi\UrlShortener\Provider\Sina\SinaProvider;
+use Mremi\UrlShortener\Provider\Wechat\WechatProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests ChainProvider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
-class ChainProviderTest extends \PHPUnit_Framework_TestCase
+class ChainProviderTest extends TestCase
 {
     /**
      * Tests that an unknown provider throws an exception.
@@ -39,7 +45,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
     {
         $chainProvider = new ChainProvider();
 
-        $bitlyProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Bitly\BitlyProvider')
+        $bitlyProvider = $this->getMockBuilder(BitlyProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -55,7 +61,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($chainProvider->hasProvider('bitly'));
         $this->assertCount(1, $chainProvider->getProviders());
 
-        $googleProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Google\GoogleProvider')
+        $googleProvider = $this->getMockBuilder(GoogleProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -71,7 +77,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($chainProvider->hasProvider('google'));
         $this->assertCount(2, $chainProvider->getProviders());
 
-        $baiduProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Baidu\BaiduProvider')
+        $baiduProvider = $this->getMockBuilder(BaiduProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -87,7 +93,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($chainProvider->hasProvider('baidu'));
         $this->assertCount(3, $chainProvider->getProviders());
 
-        $sinaProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Sina\SinaProvider')
+        $sinaProvider = $this->getMockBuilder(SinaProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -103,7 +109,7 @@ class ChainProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($chainProvider->hasProvider('sina'));
         $this->assertCount(4, $chainProvider->getProviders());
 
-        $wechatProvider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Wechat\WechatProvider')
+        $wechatProvider = $this->getMockBuilder(WechatProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 

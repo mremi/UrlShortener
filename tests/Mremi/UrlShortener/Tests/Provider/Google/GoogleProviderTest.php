@@ -11,14 +11,19 @@
 
 namespace Mremi\UrlShortener\Tests\Provider\Google;
 
+use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Tests GoogleProvider class.
  *
  * @author Rémi Marseille <marseille.remi@gmail.com>
  */
-class GoogleProviderTest extends \PHPUnit_Framework_TestCase
+class GoogleProviderTest extends TestCase
 {
     /**
      * @var object
@@ -46,7 +51,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($this->provider, 'getUri');
         $method->setAccessible(true);
 
-        $uri = $method->invoke($this->provider, array('foo' => 'bar'));
+        $uri = $method->invoke($this->provider, ['foo' => 'bar']);
 
         $this->assertSame('?foo=bar', $uri);
     }
@@ -76,7 +81,7 @@ class GoogleProviderTest extends \PHPUnit_Framework_TestCase
         $method = new \ReflectionMethod($provider, 'getUri');
         $method->setAccessible(true);
 
-        $uri = $method->invoke($provider, array('foo' => 'bar'));
+        $uri = $method->invoke($provider, ['foo' => 'bar']);
 
         $this->assertSame('?foo=bar&key=secret', $uri);
     }
@@ -334,8 +339,8 @@ JSON;
      */
     protected function setUp()
     {
-        $this->provider = $this->getMockBuilder('Mremi\UrlShortener\Provider\Google\GoogleProvider')
-            ->setMethods(array('createClient'))
+        $this->provider = $this->getMockBuilder(GoogleProvider::class)
+            ->setMethods(['createClient'])
             ->getMock();
     }
 
@@ -354,7 +359,7 @@ JSON;
      */
     private function getBaseMockResponse()
     {
-        return $this->getMock('Psr\Http\Message\ResponseInterface');
+        return $this->createMock(ResponseInterface::class);
     }
 
     /**
@@ -364,7 +369,7 @@ JSON;
      */
     private function getBaseMockStream()
     {
-        return $this->getMock('Psr\Http\Message\StreamInterface');
+        return $this->createMock(StreamInterface::class);
     }
 
     /**
@@ -499,8 +504,8 @@ JSON;
      */
     private function mockClient($response, $requestMethod)
     {
-        $client = $this->getMockBuilder('GuzzleHttp\ClientInterface')
-            ->setMethods(array('send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'))
+        $client = $this->getMockBuilder(ClientInterface::class)
+            ->setMethods(['send', 'sendAsync', 'request', 'requestAsync', 'getConfig', 'get', 'post'])
             ->getMock();
         $client
             ->expects($this->once())
@@ -520,7 +525,7 @@ JSON;
      */
     private function getBaseMockLink()
     {
-        return $this->getMock('Mremi\UrlShortener\Model\LinkInterface');
+        return $this->createMock(LinkInterface::class);
     }
 
     /**
