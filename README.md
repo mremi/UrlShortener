@@ -27,27 +27,13 @@ This library allows you to shorten a URL, reverse is also possible.
 
 ## Installation
 
-Only 1 step:
+The preferred method of installation is via [Composer][https://getcomposer.org/]. Run the following
+command to install the package and add it as a requirement to your project's
+`composer.json`:
 
-### Download UrlShortener using composer
-
-Add UrlShortener in your composer.json:
-
-```js
-{
-    "require": {
-        "mremi/url-shortener": "dev-master"
-    }
-}
+```bash
+composer require mremi/url-shortener
 ```
-
-Now tell composer to download the library by running the command:
-
-``` bash
-$ php composer.phar update mremi/url-shortener
-```
-
-Composer will install the library to your project's `vendor/mremi` directory.
 
 <a name="baidu-api"></a>
 
