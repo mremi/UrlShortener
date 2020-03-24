@@ -40,7 +40,7 @@ class OAuthClient implements AuthenticationInterface
      */
     public function __construct($appid, $appsecret)
     {
-        $this->appid = $appid;
+        $this->appid     = $appid;
         $this->appsecret = $appsecret;
     }
 
@@ -49,17 +49,17 @@ class OAuthClient implements AuthenticationInterface
      */
     public function getAccessToken()
     {
-        $client = new Client(array(
+        $client = new Client([
             'base_uri' => 'https://api.weixin.qq.com',
-        ));
+        ]);
 
-        $apiRawResponse = $client->get('/cgi-bin/token', array(
-            'query' => array(
+        $apiRawResponse = $client->get('/cgi-bin/token', [
+            'query' => [
                 'grant_type' => 'client_credential',
                 'appid'      => $this->appid,
                 'secret'     => $this->appsecret,
-            ),
-        ));
+            ],
+        ]);
         $response = json_decode($apiRawResponse->getBody()->getContents());
 
         if (null === $response) {

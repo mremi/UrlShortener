@@ -39,7 +39,7 @@ class GoogleProvider implements UrlShortenerProviderInterface
      * @param string $apiKey  A Google API key, optional
      * @param array  $options An array of options used to do the shorten/expand request
      */
-    public function __construct($apiKey = null, array $options = array())
+    public function __construct($apiKey = null, array $options = [])
     {
         $this->apiKey  = $apiKey;
         $this->options = $options;
@@ -61,11 +61,11 @@ class GoogleProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $response = $client->post($this->getUri(), array_merge(
-            array(
-                'json' => array(
+            [
+                'json' => [
                     'longUrl' => $link->getLongUrl(),
-                ),
-            ),
+                ],
+            ],
             $this->options
         ));
 
@@ -81,9 +81,9 @@ class GoogleProvider implements UrlShortenerProviderInterface
     {
         $client = $this->createClient();
 
-        $response = $client->get($this->getUri(array(
+        $response = $client->get($this->getUri([
             'shortUrl' => $link->getShortUrl(),
-        )), $this->options);
+        ]), $this->options);
 
         $response = $this->validate($response->getBody()->getContents(), true);
 
@@ -100,9 +100,9 @@ class GoogleProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client(array(
+        return new Client([
             'base_uri' => 'https://www.googleapis.com/urlshortener/v1/url',
-        ));
+        ]);
     }
 
     /**
@@ -110,12 +110,12 @@ class GoogleProvider implements UrlShortenerProviderInterface
      *
      * @param array $parameters An array of parameters, optional
      *
-     * @return null|string
+     * @return string|null
      */
-    private function getUri(array $parameters = array())
+    private function getUri(array $parameters = [])
     {
         if ($this->apiKey) {
-            $parameters = array_merge($parameters, array('key' => $this->apiKey));
+            $parameters = array_merge($parameters, ['key' => $this->apiKey]);
         }
 
         if (0 === count($parameters)) {

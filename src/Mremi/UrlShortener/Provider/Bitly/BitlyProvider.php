@@ -39,7 +39,7 @@ class BitlyProvider implements UrlShortenerProviderInterface
      * @param AuthenticationInterface $auth    An authentication instance
      * @param array                   $options An array of options used to do the shorten/expand request
      */
-    public function __construct(AuthenticationInterface $auth, array $options = array())
+    public function __construct(AuthenticationInterface $auth, array $options = [])
     {
         $this->auth    = $auth;
         $this->options = $options;
@@ -109,9 +109,9 @@ class BitlyProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client(array(
+        return new Client([
             'base_uri' => 'https://api-ssl.bitly.com',
-        ));
+        ]);
     }
 
     /**

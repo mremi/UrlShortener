@@ -11,14 +11,16 @@
 
 namespace Mremi\UrlShortener\Tests\Provider\Bitly;
 
+use Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface;
 use Mremi\UrlShortener\Provider\Bitly\GenericAccessTokenAuthenticator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests GenericAccessTokenAuthenticator class.
  *
  * @author Marcus Sá <marcusesa@gmail.com>
  */
-class GenericAccessTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
+class GenericAccessTokenAuthenticatorTest extends TestCase
 {
     const GENERIC_ACCESS_TOKEN = '9a2j4kal4701mk2enk15lmi2';
 
@@ -29,10 +31,7 @@ class GenericAccessTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
     {
         $genericAccessTokenAuthenticator = new GenericAccessTokenAuthenticator(self::GENERIC_ACCESS_TOKEN);
 
-        $this->assertInstanceOf(
-            'Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface',
-            $genericAccessTokenAuthenticator
-        );
+        $this->assertInstanceOf(AuthenticationInterface::class, $genericAccessTokenAuthenticator);
     }
 
     /**

@@ -40,7 +40,7 @@ class WechatProvider implements UrlShortenerProviderInterface
      * @param AuthenticationInterface $auth    An authentication instance
      * @param array                   $options An array of options used to do the shorten/expand request
      */
-    public function __construct(AuthenticationInterface $auth, array $options = array())
+    public function __construct(AuthenticationInterface $auth, array $options = [])
     {
         $this->auth    = $auth;
         $this->options = $options;
@@ -68,12 +68,12 @@ class WechatProvider implements UrlShortenerProviderInterface
         $response = $client->post(sprintf('/cgi-bin/shorturl?access_token=%s',
             $this->auth->getAccessToken()
         ), array_merge(
-            array(
-                'json' => array(
+            [
+                'json' => [
                     'action'   => 'long2short',
                     'long_url' => $link->getLongUrl(),
-                ),
-            ),
+                ],
+            ],
             $this->options
         ));
 
@@ -105,9 +105,9 @@ class WechatProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client(array(
+        return new Client([
             'base_uri' => 'https://api.weixin.qq.com',
-        ));
+        ]);
     }
 
     /**

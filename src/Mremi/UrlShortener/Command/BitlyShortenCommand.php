@@ -53,7 +53,7 @@ class BitlyShortenCommand extends Command
         $link = new Link();
         $link->setLongUrl($input->getArgument('long-url'));
 
-        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : [];
 
         $provider = new BitlyProvider(
             new OAuthClient($input->getArgument('username'), $input->getArgument('password')),

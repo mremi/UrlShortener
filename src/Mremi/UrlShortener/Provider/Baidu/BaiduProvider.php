@@ -33,7 +33,7 @@ class BaiduProvider implements UrlShortenerProviderInterface
      *
      * @param array $options An array of options used to do the shorten/expand request
      */
-    public function __construct(array $options = array())
+    public function __construct(array $options = [])
     {
         $this->options = $options;
     }
@@ -54,11 +54,11 @@ class BaiduProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $response = $client->post('/admin/create', array_merge(
-            array(
-                'json' => array(
+            [
+                'json' => [
                     'url' => $link->getLongUrl(),
-                ),
-            ),
+                ],
+            ],
             $this->options
         ));
 
@@ -75,11 +75,11 @@ class BaiduProvider implements UrlShortenerProviderInterface
         $client = $this->createClient();
 
         $response = $client->post('/admin/query', array_merge(
-            array(
-                'json' => array(
+            [
+                'json' => [
                     'shortUrl' => $link->getShortUrl(),
-                ),
-            ),
+                ],
+            ],
             $this->options
         ));
 
@@ -98,9 +98,9 @@ class BaiduProvider implements UrlShortenerProviderInterface
      */
     protected function createClient()
     {
-        return new Client(array(
+        return new Client([
             'base_uri' => 'https://dwz.cn',
-        ));
+        ]);
     }
 
     /**

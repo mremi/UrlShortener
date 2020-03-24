@@ -38,7 +38,7 @@ class GoogleShortenCommand extends Command
             ->setDescription('Shortens the long given URL using the Google API')
 
             ->addArgument('long-url', InputArgument::REQUIRED, 'The long URL to shorten')
-            ->addArgument('api-key',  InputArgument::OPTIONAL, 'A Google API key, optional')
+            ->addArgument('api-key', InputArgument::OPTIONAL, 'A Google API key, optional')
 
             ->addOption('options', null, InputOption::VALUE_REQUIRED, 'An array of options used by request');
     }
@@ -51,7 +51,7 @@ class GoogleShortenCommand extends Command
         $link = new Link();
         $link->setLongUrl($input->getArgument('long-url'));
 
-        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : array();
+        $options = $input->getOption('options') ? json_decode($input->getOption('options'), true) : [];
 
         $provider = new GoogleProvider($input->getArgument('api-key'), $options);
 
