@@ -27,7 +27,7 @@ This library allows you to shorten a URL, reverse is also possible.
 
 ## Installation
 
-The preferred method of installation is via [Composer][https://getcomposer.org/]. Run the following
+The preferred method of installation is via [Composer](https://getcomposer.org/). Run the following
 command to install the package and add it as a requirement to your project's
 `composer.json`:
 
@@ -51,7 +51,7 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $baiduProvider = new BaiduProvider(
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $baiduProvider->shorten($link);
@@ -85,7 +85,7 @@ $link = new Link;
 $link->setShortUrl('http://dwz.cn/dDlVEAt5');
 
 $googleProvider = new BaiduProvider(
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->expand($link);
@@ -107,7 +107,7 @@ $ bin/shortener baidu:expand http://dwz.cn/dDlVEAt5 --options='{"connect_timeout
 
 <a name="bitly-api"></a>
 
-## Bit.ly API
+## Bit.ly API V4
 
 ### Shorten
 
@@ -122,8 +122,8 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $bitlyProvider = new BitlyProvider(
-    new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
-    array('connect_timeout' => 1, 'timeout' => 1)
+    new GenericAccessTokenAuthenticator('generic_access_token'), // or old OAuthClient('username', 'password')
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $bitlyProvider->shorten($link);
@@ -160,8 +160,8 @@ $link = new Link;
 $link->setShortUrl('http://goo.gl/fbsS');
 
 $bitlyProvider = new BitlyProvider(
-    new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
-    array('connect_timeout' => 1, 'timeout' => 1)
+    new GenericAccessTokenAuthenticator('generic_access_token'), // or old OAuthClient('username', 'password')
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $bitlyProvider->expand($link);
@@ -200,7 +200,7 @@ $link->setLongUrl('http://www.google.com');
 
 $googleProvider = new GoogleProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->shorten($link);
@@ -242,7 +242,7 @@ $link->setShortUrl('http://goo.gl/fbsS');
 
 $googleProvider = new GoogleProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->expand($link);
@@ -286,7 +286,7 @@ $link->setLongUrl('http://www.google.com');
 
 $sinaProvider = new SinaProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $sinaProvider->shorten($link);
@@ -321,7 +321,7 @@ $link->setShortUrl('http://t.cn/h51yw');
 
 $sinaProvider = new SinaProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->expand($link);
@@ -359,7 +359,7 @@ $link->setLongUrl('http://www.google.com');
 
 $wechatProvider = new WechatProvider(
     new OAuthClient('username', 'password'),
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $wechatProvider->shorten($link);
