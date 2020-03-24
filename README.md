@@ -107,7 +107,7 @@ $ bin/shortener baidu:expand http://dwz.cn/dDlVEAt5 --options='{"connect_timeout
 
 <a name="bitly-api"></a>
 
-## Bit.ly API
+## Bit.ly API V4
 
 ### Shorten
 
@@ -122,7 +122,7 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $bitlyProvider = new BitlyProvider(
-    new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
+    new GenericAccessTokenAuthenticator('generic_access_token'), // or old OAuthClient('username', 'password')
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
@@ -160,7 +160,7 @@ $link = new Link;
 $link->setShortUrl('http://goo.gl/fbsS');
 
 $bitlyProvider = new BitlyProvider(
-    new OAuthClient('username', 'password'), // or new GenericAccessTokenAuthenticator('generic_access_token')
+    new GenericAccessTokenAuthenticator('generic_access_token'), // or old OAuthClient('username', 'password')
     array('connect_timeout' => 1, 'timeout' => 1)
 );
 
