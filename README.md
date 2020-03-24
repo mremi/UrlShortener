@@ -27,7 +27,7 @@ This library allows you to shorten a URL, reverse is also possible.
 
 ## Installation
 
-The preferred method of installation is via [Composer][https://getcomposer.org/]. Run the following
+The preferred method of installation is via [Composer](https://getcomposer.org/). Run the following
 command to install the package and add it as a requirement to your project's
 `composer.json`:
 
