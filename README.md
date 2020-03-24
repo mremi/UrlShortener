@@ -51,7 +51,7 @@ $link = new Link;
 $link->setLongUrl('http://www.google.com');
 
 $baiduProvider = new BaiduProvider(
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $baiduProvider->shorten($link);
@@ -85,7 +85,7 @@ $link = new Link;
 $link->setShortUrl('http://dwz.cn/dDlVEAt5');
 
 $googleProvider = new BaiduProvider(
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->expand($link);
@@ -123,7 +123,7 @@ $link->setLongUrl('http://www.google.com');
 
 $bitlyProvider = new BitlyProvider(
     new GenericAccessTokenAuthenticator('generic_access_token'), // or old OAuthClient('username', 'password')
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $bitlyProvider->shorten($link);
@@ -161,7 +161,7 @@ $link->setShortUrl('http://goo.gl/fbsS');
 
 $bitlyProvider = new BitlyProvider(
     new GenericAccessTokenAuthenticator('generic_access_token'), // or old OAuthClient('username', 'password')
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $bitlyProvider->expand($link);
@@ -200,7 +200,7 @@ $link->setLongUrl('http://www.google.com');
 
 $googleProvider = new GoogleProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->shorten($link);
@@ -242,7 +242,7 @@ $link->setShortUrl('http://goo.gl/fbsS');
 
 $googleProvider = new GoogleProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->expand($link);
@@ -286,7 +286,7 @@ $link->setLongUrl('http://www.google.com');
 
 $sinaProvider = new SinaProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $sinaProvider->shorten($link);
@@ -321,7 +321,7 @@ $link->setShortUrl('http://t.cn/h51yw');
 
 $sinaProvider = new SinaProvider(
     'api_key',
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $googleProvider->expand($link);
@@ -359,7 +359,7 @@ $link->setLongUrl('http://www.google.com');
 
 $wechatProvider = new WechatProvider(
     new OAuthClient('username', 'password'),
-    array('connect_timeout' => 1, 'timeout' => 1)
+    ['connect_timeout' => 1, 'timeout' => 1]
 );
 
 $wechatProvider->shorten($link);
