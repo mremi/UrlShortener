@@ -5,6 +5,7 @@
 * Add support for PHP 8+
 * Add support for Guzzle 7+
 * Add support for Symfony 6+
+* Modernize tests
 
 ## 2.3.0 (2020-03-23)
 

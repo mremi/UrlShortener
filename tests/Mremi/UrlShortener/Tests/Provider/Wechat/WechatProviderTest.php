@@ -12,6 +12,7 @@
 namespace Mremi\UrlShortener\Tests\Provider\Wechat;
 
 use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface;
 use Mremi\UrlShortener\Provider\Wechat\WechatProvider;
@@ -54,12 +55,12 @@ class WechatProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Wechat returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Wechat response is probably mal-formed because cannot be json-decoded.
      */
     public function testShortenThrowsExceptionIfApiResponseIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Wechat response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString());
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -67,12 +68,12 @@ class WechatProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Wechat returns a response with no errcode.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "errcode" does not exist within Wechat response.
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoErrorCode()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "errcode" does not exist within Wechat response.');
+
         $this->mockClient($this->getMockResponseAsInvalidObject());
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -80,12 +81,12 @@ class WechatProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Wechat returns an invalid status code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Wechat returned status code "40001" with message "invalid credential, access_token is invalid or not latest hint: [miSs30226vr31!]"
      */
     public function testShortenThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Wechat returned status code "40001" with message "invalid credential, access_token is invalid or not latest hint: [miSs30226vr31!]"');
+
         $this->mockClient($this->getMockResponseWithInvalidStatusCode());
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -130,12 +131,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Wechat returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Wechat does not support expand url yet.
      */
     public function testExpandThrowsExceptionIfApiResponseIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Wechat does not support expand url yet.');
+
         //$this->mockClient($this->getMockResponseAsString());
 
         $this->provider->expand($this->getBaseMockLink());
