@@ -5,7 +5,7 @@ This library allows you to shorten a URL, reverse is also possible.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c4e06c9d-547c-47bb-8abb-fccc68b7df7a/big.png)](https://insight.sensiolabs.com/projects/c4e06c9d-547c-47bb-8abb-fccc68b7df7a)
 
-[![Build Status](https://api.travis-ci.org/mremi/UrlShortener.png?branch=master)](https://travis-ci.org/mremi/UrlShortener)
+[![Build Status](https://api.travis-ci.com/mremi/UrlShortener.png?branch=master)](https://travis-ci.org/mremi/UrlShortener)
 [![Total Downloads](https://poser.pugx.org/mremi/url-shortener/downloads.png)](https://packagist.org/packages/mremi/url-shortener)
 [![Latest Stable Version](https://poser.pugx.org/mremi/url-shortener/v/stable.png)](https://packagist.org/packages/mremi/url-shortener)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/mremi/UrlShortener/badges/quality-score.png?s=34c4ba6b0cd272673fa121c32a63e1ce668b9b2a)](https://scrutinizer-ci.com/g/mremi/UrlShortener/)
