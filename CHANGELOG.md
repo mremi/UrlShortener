@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0 (TBD)
+
+* Add support for PHP 8+
+* Add support for Guzzle 7+
+* Add support for Symfony 6+
+
 ## 2.3.0 (2020-03-23)
 
 * Bump minimum required PHP version to 5.6
