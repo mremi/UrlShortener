@@ -28,8 +28,8 @@ install:
 	composer install
 
 test:
-	@if [ ! -f vendor/bin/phpunit ]; then make install; fi
-	vendor/bin/phpunit
+	@if [ ! -f vendor/bin/simple-phpunit ]; then make install; fi
+	SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT=1 vendor/bin/simple-phpunit
 
 update:
 	composer update

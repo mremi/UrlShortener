@@ -12,6 +12,7 @@
 namespace Mremi\UrlShortener\Tests\Provider\Bitly;
 
 use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Bitly\AuthenticationInterface;
 use Mremi\UrlShortener\Provider\Bitly\BitlyProvider;
@@ -33,12 +34,12 @@ class BitlyProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Bit.ly returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Bit.ly response is probably mal-formed because cannot be json-decoded.
      */
     public function testShortenThrowsExceptionIfApiResponseIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Bit.ly response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString());
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -46,12 +47,12 @@ class BitlyProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Bit.ly returns an invalid status code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Bit.ly returned status code "404" with message "NOT_FOUND"
      */
     public function testShortenThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Bit.ly returned status code "404" with message "NOT_FOUND"');
+
         $this->mockClient($this->getMockResponseWithInvalidStatusCode());
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -107,12 +108,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Bit.ly returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Bit.ly response is probably mal-formed because cannot be json-decoded.
      */
     public function testExpandThrowsExceptionIfApiResponseIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Bit.ly response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString());
 
         $this->provider->expand($this->getBaseMockLink());
@@ -120,12 +121,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Bit.ly returns an invalid status code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Bit.ly returned status code "404" with message "NOT_FOUND"
      */
     public function testExpandThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Bit.ly returned status code "404" with message "NOT_FOUND"');
+
         $this->mockClient($this->getMockResponseWithInvalidStatusCode());
 
         $this->provider->expand($this->getBaseMockLink());

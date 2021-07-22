@@ -18,6 +18,7 @@ use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 use Mremi\UrlShortener\Provider\Sina\SinaProvider;
 use Mremi\UrlShortener\Provider\Wechat\WechatProvider;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * Tests ChainProvider class.
@@ -28,12 +29,12 @@ class ChainProviderTest extends TestCase
 {
     /**
      * Tests that an unknown provider throws an exception.
-     *
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Unable to retrieve the provider named: "foo"
      */
     public function testUnknownProvider()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to retrieve the provider named: "foo"');
+
         $chainProvider = new ChainProvider();
         $chainProvider->getProvider('foo');
     }

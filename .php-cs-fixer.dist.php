@@ -12,7 +12,7 @@ EOF;
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__);
 
-$config = PhpCsFixer\Config::create()
+$config = (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,

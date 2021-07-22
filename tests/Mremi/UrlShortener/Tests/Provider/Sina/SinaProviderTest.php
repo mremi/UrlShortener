@@ -12,6 +12,7 @@
 namespace Mremi\UrlShortener\Tests\Provider\Sina;
 
 use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Sina\SinaProvider;
 use PHPUnit\Framework\TestCase;
@@ -50,12 +51,12 @@ class SinaProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Sina returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina response is probably mal-formed because cannot be json-decoded.
      */
     public function testShortenThrowsExceptionIfResponseApiIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString(), 'get');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -63,12 +64,12 @@ class SinaProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Sina returns an error response.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina returned status code "10006" with message "source paramter(appkey) is missing
      */
     public function testShortenThrowsExceptionIfApiResponseIsError()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina returned status code "10006" with message "source paramter(appkey) is missing');
+
         $this->mockClient($this->getMockResponseWithError(), 'get');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -76,12 +77,12 @@ class SinaProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Sina returns a response with no id.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina returned status code "10006" with message "source paramter(appkey) is missing
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoId()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina returned status code "10006" with message "source paramter(appkey) is missing');
+
         $this->mockClient($this->getMockResponseWithNoId(), 'get');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -89,12 +90,12 @@ class SinaProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Sina returns a response with no longUrl.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "longUrl" does not exist within Sina response.
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoLongUrl()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "longUrl" does not exist within Sina response.');
+
         $this->mockClient($this->getMockResponseWithNoLongUrl(), 'get');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -146,12 +147,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Sina returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina response is probably mal-formed because cannot be json-decoded.
      */
     public function testExpandThrowsExceptionIfResponseApiIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -159,12 +160,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Sina returns an error response.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina returned status code "10006" with message "source paramter(appkey) is missing"
      */
     public function testExpandThrowsExceptionIfApiResponseIsError()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina returned status code "10006" with message "source paramter(appkey) is missing"');
+
         $this->mockClient($this->getMockResponseWithError(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -172,12 +173,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Sina returns a response with no id.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina returned status code "10006" with message "source paramter(appkey) is missing"
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoId()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina returned status code "10006" with message "source paramter(appkey) is missing"');
+
         $this->mockClient($this->getMockResponseWithNoId(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -185,12 +186,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Sina returns a response with no longUrl.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "longUrl" does not exist within Sina response.
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoLongUrl()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "longUrl" does not exist within Sina response.');
+
         $this->mockClient($this->getMockResponseWithNoLongUrl(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -198,12 +199,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Sina returns an invalid status code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Sina returned status code "21506" with message "Error: Parameter value is not valid!
      */
     public function testExpandThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Sina returned status code "21506" with message "Error: Parameter value is not valid!');
+
         $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<'JSON'

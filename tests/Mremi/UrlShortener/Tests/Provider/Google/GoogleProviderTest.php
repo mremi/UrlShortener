@@ -12,6 +12,7 @@
 namespace Mremi\UrlShortener\Tests\Provider\Google;
 
 use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Google\GoogleProvider;
 use PHPUnit\Framework\TestCase;
@@ -88,12 +89,12 @@ class GoogleProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Google returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Google response is probably mal-formed because cannot be json-decoded.
      */
     public function testShortenThrowsExceptionIfResponseApiIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Google response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -101,12 +102,12 @@ class GoogleProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Google returns an error response.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Google returned status code "400" with message "Required"
      */
     public function testShortenThrowsExceptionIfApiResponseIsError()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Google returned status code "400" with message "Required"');
+
         $this->mockClient($this->getMockResponseWithError(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -114,12 +115,12 @@ class GoogleProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Google returns a response with no id.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "id" does not exist within Google response.
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoId()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "id" does not exist within Google response.');
+
         $this->mockClient($this->getMockResponseWithNoId(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -127,12 +128,12 @@ class GoogleProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Google returns a response with no longUrl.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "longUrl" does not exist within Google response.
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoLongUrl()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "longUrl" does not exist within Google response.');
+
         $this->mockClient($this->getMockResponseWithNoLongUrl(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -177,12 +178,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Google returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Google response is probably mal-formed because cannot be json-decoded.
      */
     public function testExpandThrowsExceptionIfResponseApiIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Google response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -190,12 +191,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Google returns an error response.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Google returned status code "400" with message "Required"
      */
     public function testExpandThrowsExceptionIfApiResponseIsError()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Google returned status code "400" with message "Required"');
+
         $this->mockClient($this->getMockResponseWithError(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -203,12 +204,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Google returns a response with no id.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "id" does not exist within Google response.
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoId()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "id" does not exist within Google response.');
+
         $this->mockClient($this->getMockResponseWithNoId(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -216,12 +217,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Google returns a response with no longUrl.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "longUrl" does not exist within Google response.
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoLongUrl()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "longUrl" does not exist within Google response.');
+
         $this->mockClient($this->getMockResponseWithNoLongUrl(), 'get');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -229,12 +230,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Google returns a response with no status.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "status" does not exist within Google response.
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoStatus()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "status" does not exist within Google response.');
+
         $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<'JSON'
@@ -263,12 +264,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Google returns an invalid status code.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Google returned status code "KO".
      */
     public function testExpandThrowsExceptionIfApiResponseHasInvalidStatusCode()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Google returned status code "KO".');
+
         $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<'JSON'

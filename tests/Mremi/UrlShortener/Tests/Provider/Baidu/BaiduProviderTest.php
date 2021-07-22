@@ -12,6 +12,7 @@
 namespace Mremi\UrlShortener\Tests\Provider\Baidu;
 
 use GuzzleHttp\ClientInterface;
+use Mremi\UrlShortener\Exception\InvalidApiResponseException;
 use Mremi\UrlShortener\Model\LinkInterface;
 use Mremi\UrlShortener\Provider\Baidu\BaiduProvider;
 use PHPUnit\Framework\TestCase;
@@ -50,12 +51,12 @@ class BaiduProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Baidu returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu response is probably mal-formed because cannot be json-decoded.
      */
     public function testShortenThrowsExceptionIfResponseApiIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Baidu response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -63,12 +64,12 @@ class BaiduProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Baidu returns an error response.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned code error message "-1: long url is not valid
      */
     public function testShortenThrowsExceptionIfApiResponseIsError()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Baidu returned code error message "-1: long url is not valid');
+
         $this->mockClient($this->getMockResponseWithError(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -76,12 +77,12 @@ class BaiduProviderTest extends TestCase
 
     /**
      * Tests the shorten method throws exception if Baidu returns a response with no short url.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned code error message "-1: unsafe url
      */
     public function testShortenThrowsExceptionIfApiResponseHasNoShortUrl()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Baidu returned code error message "-1: unsafe url');
+
         $this->mockClient($this->getMockResponseWithNoShortUrl(), 'post');
 
         $this->provider->shorten($this->getBaseMockLink());
@@ -127,12 +128,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Baidu returns a string.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu response is probably mal-formed because cannot be json-decoded.
      */
     public function testExpandThrowsExceptionIfResponseApiIsString()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Baidu response is probably mal-formed because cannot be json-decoded.');
+
         $this->mockClient($this->getMockResponseAsString(), 'post');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -140,12 +141,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Baidu returns an error response.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned code error message "-1: long url is not valid
      */
     public function testExpandThrowsExceptionIfApiResponseIsError()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Baidu returned code error message "-1: long url is not valid');
+
         $this->mockClient($this->getMockResponseWithError(), 'post');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -153,12 +154,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Baidu returns a response with no longUrl.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Baidu returned code error message "-2: short url dose not exist
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoLongUrl()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Baidu returned code error message "-2: short url dose not exist');
+
         $this->mockClient($this->getMockResponseWithNoLongUrl(), 'post');
 
         $this->provider->expand($this->getBaseMockLink());
@@ -166,12 +167,12 @@ JSON;
 
     /**
      * Tests the expand method throws exception if Baidu returns a response with no status.
-     *
-     * @expectedException        \Mremi\UrlShortener\Exception\InvalidApiResponseException
-     * @expectedExceptionMessage Property "Code" does not exist within Baidu response.
      */
     public function testExpandThrowsExceptionIfApiResponseHasNoStatus()
     {
+        $this->expectException(InvalidApiResponseException::class);
+        $this->expectExceptionMessage('Property "Code" does not exist within Baidu response.');
+
         $response = $this->getBaseMockResponse();
 
         $apiRawResponse = <<<'JSON'
