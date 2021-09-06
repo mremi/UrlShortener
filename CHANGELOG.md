@@ -1,6 +1,10 @@
 # Changelog
 
-## 2.4.0 (TBD)
+## master
+
+* todo...
+
+## 2.4.0 (2021-09-06)
 
 * Add support for PHP 8+
 * Add support for Guzzle 7+
