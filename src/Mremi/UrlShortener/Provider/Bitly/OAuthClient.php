@@ -48,10 +48,10 @@ class OAuthClient implements AuthenticationInterface
     public function getAccessToken()
     {
         $client = new Client([
-            'base_uri' => 'https://api-ssl.bitly.com/oauth/access_token',
+            'base_uri' => 'https://api-ssl.bitly.com/oauth/',
         ]);
 
-        $response = $client->post(null, [
+        $response = $client->post('access_token', [
             'auth' => [
                 $this->username,
                 $this->password,
